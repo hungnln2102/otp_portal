@@ -1,0 +1,5 @@
+/* Tết Nguyên Đán: đỏ – vàng, đèn lồng treo đung đưa, hoa mai rơi */
+[data-theme="tet"]{--display:"Playfair Display",Georgia,serif;--h1s:italic;--bg1:#8e1118;--bg2:#2e0407;--bg-art:radial-gradient(ellipse at 50% -10%,rgba(255,200,100,.28),transparent 55%);
+  --ink:#fff3d6;--soft:rgba(255,243,214,.8);--line:rgba(247,201,72,.35);--accent:#f7c948;--panel:rgba(60,4,8,.5);
+  --btn:linear-gradient(180deg,#ffd96a,#d99a1c);--btn-ink:#5b0b0f;--glow:rgba(247,201,72,.4);--emblem:radial-gradient(circle at 38% 32%,#f0393a,#a30f16 70%)}
+[data-theme="tet"] .lanterns{display:block}

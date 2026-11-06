@@ -1,0 +1,211 @@
+/* ==========================================================================
+   FESTIVAL THEMES STYLESHEET - MAVRYK OTP PORTAL
+   Kế thừa kiến trúc từ source le-hoi-themes của Master
+   ========================================================================== */
+
+/* 1. TẾT CỔ TRUYỀN */
+[data-theme="tet"] {
+  --display: "Playfair Display", Georgia, serif;
+  --bg1: #8e1118;
+  --bg2: #250305;
+  --bg-art: radial-gradient(ellipse at 50% -10%, rgba(255, 200, 100, .32), transparent 60%);
+  --ink: #fff4db;
+  --soft: rgba(255, 244, 219, .82);
+  --line: rgba(247, 201, 72, .35);
+  --accent: #f7c948;
+  --panel: rgba(54, 4, 8, .75);
+  --btn: linear-gradient(180deg, #ffd96a, #d99a1c);
+  --btn-ink: #52080c;
+  --glow: rgba(247, 201, 72, .45);
+  --ground: #160204;
+  --lan-a: #ff5a3c;
+  --lan-b: #a80f0f;
+  --lan-glow: rgba(255, 110, 60, .55);
+}
+[data-theme="tet"] .festival-lanterns { display: block !important; }
+[data-theme="tet"] #g-dinh { display: block !important; }
+
+/* 2. GIỖ TỔ HÙNG VƯƠNG */
+[data-theme="gio-to"] {
+  --display: "Noto Serif Display", Georgia, serif;
+  --bg1: #701410;
+  --bg2: #1e0302;
+  --bg-art: repeating-conic-gradient(from 0deg at 50% -8%, rgba(227, 176, 75, .12) 0 3deg, transparent 3deg 12deg);
+  --ink: #f6ecd4;
+  --soft: rgba(246, 236, 212, .8);
+  --line: rgba(227, 176, 75, .38);
+  --accent: #e3b04b;
+  --panel: rgba(34, 4, 3, .78);
+  --ground: #12100a;
+  --btn: linear-gradient(180deg, #f6dc9a, #d29a2f);
+  --btn-ink: #3b0a06;
+  --glow: rgba(227, 176, 75, .42);
+  --lan-a: #ee4a38;
+  --lan-b: #8a120c;
+  --lan-glow: rgba(230, 80, 50, .5);
+}
+[data-theme="gio-to"] .festival-lanterns { display: block !important; }
+[data-theme="gio-to"] #g-dinh { display: block !important; }
+[data-theme="gio-to"] .festival-lanterns i:nth-child(n+4) { display: none !important; }
+
+/* 3. TẾT TRUNG THU */
+[data-theme="trung-thu"] {
+  --display: "Lobster", Georgia, serif;
+  --bg1: #35135c;
+  --bg2: #0e0422;
+  --bg-art: radial-gradient(circle at 82% 16%, rgba(255, 211, 107, .25), transparent 45%);
+  --ink: #fff0d8;
+  --soft: rgba(255, 240, 216, .84);
+  --line: rgba(255, 169, 77, .38);
+  --accent: #ffa94d;
+  --panel: rgba(43, 15, 77, .72);
+  --ground: #0a0218;
+  --btn: linear-gradient(180deg, #ffb25e, #ec7f1c);
+  --btn-ink: #2a0d00;
+  --glow: rgba(255, 169, 77, .45);
+  --moon-a: #fff6cf;
+  --moon-b: #ffc94f;
+  --moon-glow: rgba(255, 200, 80, .36);
+  --lan-a: #ffbb66;
+  --lan-b: #e0501c;
+  --lan-glow: rgba(255, 150, 60, .55);
+}
+[data-theme="trung-thu"] .festival-moon, [data-theme="trung-thu"] .festival-lanterns { display: block !important; }
+[data-theme="trung-thu"] #g-house { display: block !important; }
+[data-theme="trung-thu"] .festival-lanterns i:nth-child(-n+3) { display: none !important; }
+
+/* 4. HALLOWEEN */
+[data-theme="halloween"] {
+  --display: "Cinzel", Georgia, serif;
+  --bg1: #1c0b2e;
+  --bg2: #06020d;
+  --bg-art: radial-gradient(circle at 75% 20%, rgba(255, 120, 30, .2), transparent 50%);
+  --ink: #faebdc;
+  --soft: rgba(250, 235, 220, .78);
+  --line: rgba(255, 120, 30, .38);
+  --accent: #ff7518;
+  --panel: rgba(24, 9, 38, .8);
+  --ground: #05010a;
+  --btn: linear-gradient(180deg, #ff8c3b, #d95507);
+  --btn-ink: #1a0500;
+  --glow: rgba(255, 120, 30, .45);
+  --moon-a: #ffb066;
+  --moon-b: #cc4e00;
+  --moon-glow: rgba(255, 120, 30, .42);
+}
+[data-theme="halloween"] .festival-moon { display: block !important; }
+[data-theme="halloween"] #g-house { display: block !important; }
+
+/* 5. GIÁNG SINH */
+[data-theme="giang-sinh"] {
+  --display: "Playfair Display", Georgia, serif;
+  --bg1: #0a2618;
+  --bg2: #020f09;
+  --bg-art: radial-gradient(circle at 50% 10%, rgba(220, 50, 50, .22), transparent 60%);
+  --ink: #eafaf1;
+  --soft: rgba(234, 250, 241, .85);
+  --line: rgba(235, 87, 87, .38);
+  --accent: #eb5757;
+  --panel: rgba(8, 30, 20, .78);
+  --ground: #03140c;
+  --btn: linear-gradient(180deg, #f05454, #bd2121);
+  --btn-ink: #ffffff;
+  --glow: rgba(235, 87, 87, .45);
+}
+[data-theme="giang-sinh"] #g-pine { display: block !important; }
+
+/* 6. NGÀY PHỤ NỮ */
+[data-theme="phu-nu"] {
+  --display: "Cormorant Garamond", Georgia, serif;
+  --bg1: #4a1232;
+  --bg2: #180310;
+  --bg-art: radial-gradient(circle at 50% 15%, rgba(255, 150, 190, .25), transparent 55%);
+  --ink: #fff0f6;
+  --soft: rgba(255, 240, 246, .85);
+  --line: rgba(255, 140, 185, .38);
+  --accent: #ff85b3;
+  --panel: rgba(50, 10, 34, .76);
+  --ground: #14020d;
+  --btn: linear-gradient(180deg, #ff85b3, #d94179);
+  --btn-ink: #ffffff;
+  --glow: rgba(255, 133, 179, .45);
+}
+[data-theme="phu-nu"] #g-house { display: block !important; }
+
+/* CÁC PHẦN TỬ SCENE CHUNG */
+.festival-moon {
+  position: fixed;
+  right: clamp(4%, 7vw, 12%);
+  top: clamp(60px, 9vh, 110px);
+  width: clamp(110px, 15vw, 180px);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  z-index: 0;
+  box-shadow: 0 0 70px 24px var(--moon-glow, rgba(255,255,255,.3)), 0 0 160px 60px var(--moon-glow, rgba(255,255,255,.3));
+  animation: f-moonrise 2.4s cubic-bezier(.2,.8,.2,1) both, f-breathe 9s 2.4s ease-in-out infinite;
+  display: none;
+  pointer-events: none;
+}
+
+.festival-lanterns {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+  display: none;
+}
+.festival-lanterns i {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  width: 1.5px;
+  height: var(--len);
+  background: linear-gradient(rgba(255, 225, 160, .15), rgba(255, 225, 160, .75));
+  transform-origin: 50% 0;
+  animation: f-drop 1.5s cubic-bezier(.2,.9,.25,1.12) var(--dl) backwards, f-sway var(--d) ease-in-out var(--dl) infinite alternate;
+}
+.festival-lanterns i::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 40px * var(--s));
+  width: calc(190px * var(--s));
+  aspect-ratio: 1;
+  margin: calc(-95px * var(--s)) 0 0 calc(-95px * var(--s));
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--lan-glow, rgba(255,110,60,.55)), transparent 66%);
+  animation: f-halo 3.4s ease-in-out infinite alternate;
+}
+.festival-lanterns i svg {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: calc(56px * var(--s));
+  margin-left: calc(-28px * var(--s));
+  overflow: visible;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .45));
+}
+
+.festival-ground {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 25vh;
+  z-index: 1;
+  fill: var(--ground, #000);
+  color: var(--ground, #000);
+  pointer-events: none;
+  animation: f-rise 1.6s .3s cubic-bezier(.2,.8,.2,1) backwards;
+}
+.festival-ground g { display: none; }
+
+@keyframes f-drop { from { translate: 0 -130%; } }
+@keyframes f-sway { from { transform: rotate(-4.5deg); } to { transform: rotate(4.5deg); } }
+@keyframes f-halo { from { opacity: .4; transform: scale(.94); } to { opacity: .85; transform: scale(1.06); } }
+@keyframes f-moonrise { from { transform: translateY(60px) scale(.8); opacity: 0; } }
+@keyframes f-breathe { 50% { transform: scale(1.03); } }
+@keyframes f-rise { from { transform: translateY(40%); opacity: 0; } }
+

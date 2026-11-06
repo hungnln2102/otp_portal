@@ -1,0 +1,9 @@
+/* Tết Nguyên Tiêu: đêm rằm, trăng tròn, đèn trời bay lên, mái đình */
+[data-theme="nguyen-tieu"]{--display:"Cormorant Garamond",Georgia,serif;--h1w:700;--bg1:#16275a;--bg2:#050a1c;
+  --bg-art:radial-gradient(1.5px 1.5px at 12% 22%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 38% 12%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 55% 38%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 66% 20%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 46%,#fff 50%,transparent 51%);
+  --ink:#fdf3d0;--soft:rgba(253,243,208,.78);--line:rgba(255,214,107,.3);--accent:#ffd66b;--panel:rgba(12,22,52,.55);--ground:#050a1c;
+  --btn:linear-gradient(180deg,#ffe28a,#e0b13f);--btn-ink:#241c05;--glow:rgba(255,214,107,.45);--emblem:radial-gradient(circle at 36% 34%,#fffbe0,#f6dc8a 60%,#d8b24c);
+  --moon-a:#fffbe8;--moon-b:#f1d98c;--moon-glow:rgba(255,226,140,.3);--lan-a:#ffe6a0;--lan-b:#e98a1c;--lan-glow:rgba(255,190,80,.55)}
+[data-theme="nguyen-tieu"] .moon,[data-theme="nguyen-tieu"] .lanterns{display:block}
+[data-theme="nguyen-tieu"] #g-dinh{display:block}
+[data-theme="nguyen-tieu"] .lanterns i:nth-child(n+4){display:none}

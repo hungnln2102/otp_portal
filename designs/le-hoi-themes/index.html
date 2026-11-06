@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="tet">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tiệm Bánh Nhà Bơ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Noto+Serif+Display:wght@600;800&family=Playfair+Display:ital,wght@0,800;1,800&family=Cormorant+Garamond:wght@600;700&family=Lobster&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/themes/tet.css">
+<link rel="stylesheet" href="css/themes/nguyen-tieu.css">
+<link rel="stylesheet" href="css/themes/gio-to.css">
+<link rel="stylesheet" href="css/themes/trung-thu.css">
+<link rel="stylesheet" href="css/themes/halloween.css">
+<link rel="stylesheet" href="css/themes/phu-nu.css">
+<link rel="stylesheet" href="css/themes/giang-sinh.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="lb" cx="50%" cy="48%" r="62%"><stop offset="0" style="stop-color:var(--lan-a)"/><stop offset=".78" style="stop-color:var(--lan-b)"/></radialGradient>
+<linearGradient id="gold" x1="0" x2="1"><stop offset="0" stop-color="#8a5a12"/><stop offset=".35" stop-color="#f3d27a"/><stop offset=".7" stop-color="#c9972b"/><stop offset="1" stop-color="#7a4d0e"/></linearGradient>
+<radialGradient id="li" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff6c8" stop-opacity=".95"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+<linearGradient id="sh" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".72" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></linearGradient>
+<symbol id="lantern" viewBox="0 0 64 132">
+<path d="M32 0V12" stroke="#c9972b" stroke-width="2"/><circle cx="32" cy="4" r="3" fill="none" stroke="#c9972b" stroke-width="1.5"/>
+<rect x="19" y="12" width="26" height="8" rx="2" fill="url(#gold)"/>
+<path d="M18 20C2 40 2 82 18 100H46C62 82 62 40 46 20Z" fill="url(#lb)"/>
+<ellipse cx="32" cy="60" rx="17" ry="30" fill="url(#li)"/>
+<path d="M32 20V100M25 20C15 42 15 78 25 100M39 20C49 42 49 78 39 100M20 20C6 44 6 76 20 100M44 20C58 44 58 76 44 100" fill="none" stroke="#5a0a0a" stroke-opacity=".3" stroke-width="1"/>
+<path d="M18 20C2 40 2 82 18 100H46C62 82 62 40 46 20Z" fill="url(#sh)"/>
+<path d="M14 36C9 52 10 70 15 84" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="3" stroke-linecap="round"/>
+<rect x="20" y="100" width="24" height="8" rx="2" fill="url(#gold)"/><path d="M32 108V114" stroke="#c9972b" stroke-width="2"/>
+<g stroke="#e0b040" stroke-width="1.1" stroke-linecap="round"><path d="M32 114L26 131M32 114L29 132M32 114L32 133M32 114L35 132M32 114L38 131"/></g><circle cx="32" cy="114" r="2.6" fill="url(#gold)"/>
+</symbol></defs></svg>
+<canvas id="fx" class="fx" aria-hidden="true"></canvas>
+<div class="bokeh" aria-hidden="true"></div>
+<svg class="moon" viewBox="0 0 200 200" aria-hidden="true"><defs>
+<clipPath id="mc"><circle cx="100" cy="100" r="99"/></clipPath>
+<radialGradient id="mg" cx="38%" cy="34%" r="75%"><stop offset="0" style="stop-color:var(--moon-a)"/><stop offset="1" style="stop-color:var(--moon-b)"/></radialGradient>
+<radialGradient id="ms" cx="50%" cy="50%" r="50%"><stop offset=".7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient>
+<filter id="mf" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".02 .028" numOctaves="5" seed="11"/><feDiffuseLighting surfaceScale="6" diffuseConstant="1.05" lighting-color="#fff"><feDistantLight azimuth="235" elevation="55"/></feDiffuseLighting></filter>
+<filter id="mb"><feGaussianBlur stdDeviation="5"/></filter></defs>
+<g clip-path="url(#mc)"><circle cx="100" cy="100" r="99" fill="url(#mg)"/>
+<g filter="url(#mb)" fill="#7a6430" opacity=".24"><ellipse cx="72" cy="78" rx="26" ry="20"/><ellipse cx="120" cy="62" rx="18" ry="14"/><ellipse cx="112" cy="124" rx="30" ry="22"/><ellipse cx="66" cy="128" rx="12" ry="10"/></g>
+<rect width="200" height="200" filter="url(#mf)" style="mix-blend-mode:multiply" opacity=".5"/><circle cx="100" cy="100" r="99" fill="url(#ms)"/></g></svg>
+<div class="lanterns" aria-hidden="true">
+  <i style="--x:3%;--len:18px;--s:.85;--d:5.4s;--dl:.2s"></i><i style="--x:9%;--len:30px;--s:.9;--d:6.7s;--dl:.45s"></i><i style="--x:15%;--len:14px;--s:.7;--d:4.9s;--dl:.7s"></i>
+  <i style="--x:80%;--len:16px;--s:.72;--d:5.9s;--dl:.35s"></i><i style="--x:88%;--len:30px;--s:.9;--d:7.2s;--dl:.6s"></i><i style="--x:95%;--len:20px;--s:.8;--d:5.1s;--dl:.1s"></i>
+</div>
+<div class="lights" id="lights" aria-hidden="true"></div>
+
+<svg class="ground" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <symbol id="pine" viewBox="0 0 40 80"><path d="M20 0L31 26H26L36 48H28L40 78H0L12 48H4L14 26H9Z"/></symbol>
+  <g id="g-pine">
+    <use href="#pine" x="-6" y="100" width="50" height="100"/><use href="#pine" x="40" y="118" width="40" height="82"/><use href="#pine" x="84" y="82" width="60" height="120"/>
+    <use href="#pine" x="150" y="122" width="40" height="80"/><use href="#pine" x="196" y="104" width="50" height="100"/>
+    <use href="#pine" x="640" y="112" width="45" height="90"/><use href="#pine" x="684" y="86" width="60" height="120"/><use href="#pine" x="746" y="124" width="40" height="78"/>
+    <use href="#pine" x="790" y="96" width="55" height="110"/><use href="#pine" x="846" y="116" width="42" height="86"/><use href="#pine" x="890" y="80" width="62" height="124"/><use href="#pine" x="950" y="104" width="52" height="98"/>
+    <path d="M0 200V184Q250 166 500 182T1000 176V200Z" fill="#eaf6ff" opacity=".95"/>
+  </g>
+  <g id="g-house">
+    <path d="M0 200V172Q200 150 380 168T700 165T1000 172V200Z"/>
+    <path d="M445 172V124H615V172Z"/><path d="M435 126L530 82L625 126Z"/><path d="M580 126V92H612V126Z"/><path d="M576 94L596 56L616 94Z"/><path d="M470 110V84H482V106Z"/>
+    <path d="M130 176V118M130 148L100 122M130 138L166 108M130 158L104 144M166 108L180 96M100 122L90 108" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <g fill="#ffb347"><rect class="win" x="468" y="138" width="16" height="22"/><rect class="win w2" x="506" y="138" width="16" height="22"/><rect class="win" x="544" y="138" width="16" height="22"/><rect class="win w2" x="590" y="108" width="10" height="14"/></g>
+  </g>
+  <g id="g-dinh">
+    <path d="M0 200V178Q250 166 500 176T1000 174V200Z"/>
+    <path d="M330 176V132H670V176Z"/><path d="M285 134Q345 138 370 106H630Q655 138 715 134Q650 152 500 152Q350 152 285 134Z"/>
+    <path d="M365 108Q400 106 420 80H580Q600 106 635 108Z"/><path d="M420 82Q470 80 495 52H505Q530 80 580 82Z"/><path d="M497 52L500 38L503 52Z"/>
+  </g>
+</svg>
+
+<header class="hdr">
+  <a class="brand" href="#"><span class="mark" aria-hidden="true"></span>Tiệm Bánh Nhà Bơ</a>
+  <nav class="menu" aria-label="Chính"><a href="#">Sản phẩm</a><a href="#">Quà tặng</a><a href="#">Cửa hàng</a><a href="#">Liên hệ</a></nav>
+  <a class="cart" href="#" aria-label="Giỏ hàng, 2 món">Giỏ hàng <b>2</b></a>
+</header>
+
+<main class="main" id="main">
+  <section class="hero">
+    <div class="copy">
+      <p class="chip" id="chip"></p>
+      <h1 id="title"></h1>
+      <p class="lead" id="sub"></p>
+      <div class="cta"><a class="btn" href="#shelf">Đặt hàng ngay</a><a class="ghost" href="#shelf">Xem thực đơn</a></div>
+    </div>
+    <div class="plate" aria-hidden="true"><div class="disc"><span id="big"></span></div><div class="tag"><b id="tn"></b><span id="tp"></span></div></div>
+  </section>
+  <section class="shelf" id="shelf" aria-label="Món nổi bật"></section>
+</main>
+
+<nav class="dock" id="dock" aria-label="Chọn giao diện lễ hội"></nav>
+<script src="js/fx.js"></script>
+<script src="js/theme.js"></script>
+</body>
+</html>

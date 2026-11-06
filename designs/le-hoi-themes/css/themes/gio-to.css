@@ -1,0 +1,10 @@
+/* Giỗ Tổ Hùng Vương: sơn son thếp vàng, tia nắng Đông Sơn, mái đình, bụi vàng bay lên */
+[data-theme="gio-to"]{--bg1:#701410;--bg2:#1e0302;
+  --bg-art:repeating-conic-gradient(from 0deg at 50% -8%,rgba(227,176,75,.1) 0 3deg,transparent 3deg 12deg);
+  --ink:#f6ecd4;--soft:rgba(246,236,212,.78);--line:rgba(227,176,75,.38);--accent:#e3b04b;--panel:rgba(34,4,3,.55);--ground:#12100a;
+  --btn:linear-gradient(180deg,#f6dc9a,#d29a2f);--btn-ink:#3b0a06;--glow:rgba(227,176,75,.38);
+  --emblem:radial-gradient(circle,#7a1510 0 11%,transparent 12%),repeating-conic-gradient(from 0deg,#e3b04b 0 8deg,#2a0705 8deg 25.714deg);
+  --lan-a:#ee4a38;--lan-b:#8a120c;--lan-glow:rgba(230,80,50,.5)}
+[data-theme="gio-to"] .lanterns{display:block}[data-theme="gio-to"] #g-dinh{display:block}
+[data-theme="gio-to"] .lanterns i:nth-child(n+4){display:none}
+[data-theme="gio-to"] .disc{box-shadow:inset 0 0 0 8px #2a0705,inset 0 0 0 10px #e3b04b,0 40px 90px var(--glow)}

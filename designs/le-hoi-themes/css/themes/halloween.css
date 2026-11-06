@@ -1,0 +1,6 @@
+/* Halloween: trăng cam, nhà ma, cây trụi lá, dơi vỗ cánh */
+[data-theme="halloween"]{--display:"Playfair Display",Georgia,serif;--h1s:italic;--bg1:#2a1238;--bg2:#08030c;--bg-art:radial-gradient(ellipse at 50% 100%,rgba(123,44,191,.4),transparent 60%);
+  --ink:#f6e8ff;--soft:rgba(246,232,255,.76);--line:rgba(255,122,26,.4);--accent:#ff8a2a;--panel:rgba(26,10,36,.6);--ground:#07030b;
+  --btn:linear-gradient(180deg,#ff9440,#e2570a);--btn-ink:#1a0a24;--glow:rgba(255,122,26,.45);--emblem:radial-gradient(circle at 40% 35%,#ff9b3d,#e2570a 60%,#7a2a02);
+  --moon-a:#ffe2a8;--moon-b:#f59a38;--moon-glow:rgba(255,140,50,.3)}
+[data-theme="halloween"] .moon{display:block;right:auto;left:7%}[data-theme="halloween"] #g-house{display:block}

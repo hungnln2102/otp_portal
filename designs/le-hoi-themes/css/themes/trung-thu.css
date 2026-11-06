@@ -1,0 +1,7 @@
+/* Tết Trung Thu: trăng vàng rằm tháng Tám, đèn lồng cam, đom đóm bay */
+[data-theme="trung-thu"]{--display:"Lobster",Georgia,serif;--h1w:400;--bg1:#3d1769;--bg2:#10052a;--bg-art:radial-gradient(circle at 78% 14%,rgba(255,211,107,.22),transparent 45%);
+  --ink:#fff0d8;--soft:rgba(255,240,216,.8);--line:rgba(255,159,67,.38);--accent:#ffa94d;--panel:rgba(43,15,77,.55);
+  --btn:linear-gradient(180deg,#ffb25e,#ec7f1c);--btn-ink:#2a0d00;--glow:rgba(255,159,67,.45);--emblem:radial-gradient(circle at 40% 35%,#fff7d6,#ffd36b 55%,#e8962b);
+  --moon-a:#fff6cf;--moon-b:#ffc94f;--moon-glow:rgba(255,200,80,.32);--lan-a:#ffbb66;--lan-b:#e0501c;--lan-glow:rgba(255,150,60,.55)}
+[data-theme="trung-thu"] .moon,[data-theme="trung-thu"] .lanterns{display:block}
+[data-theme="trung-thu"] .lanterns i:nth-child(-n+3){display:none}

@@ -1,0 +1,5 @@
+/* Giáng Sinh: rừng thông phủ tuyết, đèn nháy, tuyết rơi nhiều lớp */
+[data-theme="giang-sinh"]{--display:"Lobster",Georgia,serif;--h1w:400;--bg1:#103f34;--bg2:#04130e;--bg-art:radial-gradient(ellipse at 50% -10%,rgba(255,255,255,.14),transparent 55%);
+  --ink:#f3fff7;--soft:rgba(243,255,247,.8);--line:rgba(255,255,255,.24);--accent:#ff7b7b;--panel:rgba(4,28,20,.55);--ground:#041a13;
+  --btn:linear-gradient(180deg,#ff5a5f,#c81e2b);--btn-ink:#fff;--glow:rgba(255,90,95,.4);--emblem:radial-gradient(circle at 38% 35%,#ff6b6b,#c81e2b 65%,#7d0f19)}
+[data-theme="giang-sinh"] #g-pine{display:block}

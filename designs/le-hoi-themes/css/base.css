@@ -1,0 +1,97 @@
+/* Khung chung. Mỗi theme (css/themes/*.css) chỉ ghi đè biến --* và bật/tắt các lớp cảnh (đèn lồng, trăng, nhà...). */
+:root{
+  --display:"Noto Serif Display",Georgia,serif;--font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg1:#222;--bg2:#000;--ink:#fff;--soft:rgba(255,255,255,.76);--line:rgba(255,255,255,.2);--accent:#fff;
+  --btn:#fff;--btn-ink:#000;--glow:rgba(255,255,255,.3);--emblem:#777;--panel:rgba(0,0,0,.35);--ground:#000;
+  --lan-a:#ff5a3c;--lan-b:#a80f0f;--lan-glow:rgba(255,110,60,.55);--moon-a:#fff;--moon-b:#ddd;--moon-glow:rgba(255,255,255,.3);
+  --h1w:800;--h1s:normal;
+  color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:var(--font);color:var(--ink);overflow-x:hidden;
+  background:var(--bg-art,none),linear-gradient(180deg,var(--bg1),var(--bg2));background-color:var(--bg2);background-attachment:fixed}
+/* hạt giấy: làm mặt phẳng bớt "nhựa" */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.1;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit;text-decoration:none}
+.fx{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+/* ===== lớp cảnh (mặc định ẩn) ===== */
+.moon,.lanterns,.bokeh,.ground g{display:none}
+.moon{position:fixed;right:8%;top:84px;width:clamp(110px,15vw,200px);height:auto;aspect-ratio:1;border-radius:50%;z-index:0;
+  box-shadow:0 0 70px 24px var(--moon-glow),0 0 160px 60px var(--moon-glow);animation:moonrise 2.4s cubic-bezier(.2,.8,.2,1) both,breathe 9s 2.4s ease-in-out infinite}
+.lanterns{position:fixed;inset:0 0 auto;height:0;z-index:2;pointer-events:none}
+.lanterns i{position:absolute;top:0;left:var(--x);width:1.5px;height:var(--len);background:linear-gradient(rgba(255,225,160,.15),rgba(255,225,160,.75));transform-origin:50% 0;
+  animation:drop 1.5s cubic-bezier(.2,.9,.25,1.12) var(--dl) backwards,sway var(--d) ease-in-out var(--dl) infinite alternate}
+.lanterns i::before{content:"";position:absolute;left:50%;top:calc(100% + 40px*var(--s));width:calc(190px*var(--s));aspect-ratio:1;margin:calc(-95px*var(--s)) 0 0 calc(-95px*var(--s));border-radius:50%;
+  background:radial-gradient(circle,var(--lan-glow),transparent 66%);animation:halo 3.4s ease-in-out infinite alternate}
+.lanterns i svg{position:absolute;left:50%;top:100%;width:calc(56px*var(--s));margin-left:calc(-28px*var(--s));overflow:visible;filter:drop-shadow(0 8px 10px rgba(0,0,0,.35))}
+.bokeh{position:fixed;inset:-6%;z-index:0;background:var(--bokeh);animation:drift 26s ease-in-out infinite alternate}
+.lights{position:fixed;inset:0 0 auto;height:58px;z-index:2;pointer-events:none}
+.lights svg{position:absolute;inset:0;width:100%;height:100%}.lights path{fill:none;stroke:rgba(20,20,20,.75);stroke-width:1.5}
+.lights span{position:absolute;width:9px;height:13px;margin-left:-4.5px;border-radius:50% 50% 45% 45%;background:currentColor;box-shadow:0 0 12px 3px currentColor;animation:twinkle 1.8s ease-in-out infinite alternate}
+.ground{position:fixed;left:0;bottom:0;width:100%;height:27vh;z-index:1;fill:var(--ground);color:var(--ground);pointer-events:none;animation:rise 1.6s .3s cubic-bezier(.2,.8,.2,1) backwards}
+.win{animation:flick 4s steps(1) infinite}.w2{animation-delay:-1.7s}
+/* ===== trang ===== */
+.hdr,.main{position:relative;z-index:3}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px clamp(16px,5vw,56px);margin-top:var(--hdr-top,56px)}
+.brand{display:flex;align-items:center;gap:10px;font:700 19px var(--display)}
+.mark{width:26px;height:26px;border-radius:50%;background:var(--emblem);box-shadow:0 0 0 2px var(--line)}
+.menu{display:flex;gap:26px;font-size:14.5px;color:var(--soft)}.menu a:hover{color:var(--ink)}
+.cart{font-size:14px;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--panel)}
+.cart b{margin-left:6px;padding:1px 7px;border-radius:99px;background:var(--btn);color:var(--btn-ink);font-size:12px}
+.main{width:min(1120px,100%);margin:0 auto;padding:0 clamp(16px,5vw,56px) 190px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,5vw,64px);align-items:center;padding:clamp(24px,6vh,64px) 0 48px}
+.chip{display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;font-size:14px;color:var(--accent)}
+.chip::before{content:"";width:30px;height:1px;background:currentColor}
+h1{margin:0 0 18px;font:var(--h1s) var(--h1w) clamp(40px,7vw,78px)/1.05 var(--display);text-wrap:balance;text-shadow:0 4px 30px rgba(0,0,0,.25)}
+.lead{margin:0 0 28px;max-width:46ch;font-size:17px;line-height:1.65;color:var(--soft)}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn,.ghost{padding:14px 24px;border-radius:99px;font:700 15px var(--font);transition:transform .15s,filter .2s,background .2s}
+.btn{background:var(--btn);color:var(--btn-ink);box-shadow:0 10px 28px var(--glow)}
+.ghost{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(6px)}
+.btn:hover,.ghost:hover{transform:translateY(-2px);filter:brightness(1.08)}.btn:active,.ghost:active{transform:scale(.97)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.plate{position:relative;justify-self:center}
+.disc{position:relative;width:min(380px,78vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:var(--emblem);
+  box-shadow:0 40px 90px var(--glow),inset 0 -24px 50px rgba(0,0,0,.28),inset 0 16px 34px rgba(255,255,255,.2);animation:bob 8s ease-in-out infinite}
+.disc::before{content:"";position:absolute;inset:-16px;border-radius:50%;border:1.5px dashed var(--accent);opacity:.55;animation:turn 90s linear infinite}
+.disc span{font-size:clamp(100px,17vw,160px);line-height:1;filter:drop-shadow(0 16px 18px rgba(0,0,0,.4));animation:bob 5.5s -1s ease-in-out infinite}
+.tag{position:absolute;left:-6%;bottom:9%;display:grid;gap:2px;padding:11px 16px;border-radius:14px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.tag b{font-size:14px}.tag span{color:var(--accent);font-weight:700}
+.shelf{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.item{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center;padding:22px 20px 22px 0;border-bottom:1px solid var(--line)}
+.item+.item{padding-left:24px;border-left:1px solid var(--line)}
+.item i{grid-row:span 2;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:28px;background:var(--panel);border:1px solid var(--line)}
+.item b{font-size:15.5px}.item small{font-size:13px;color:var(--soft);line-height:1.4}
+.item .row{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.item em{font-style:normal;font-weight:700;color:var(--accent)}
+.item button{font:600 13px var(--font);color:var(--ink);padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:transparent;cursor:pointer;transition:background .2s,color .2s}
+.item button:hover,.item button.ok{background:var(--btn);color:var(--btn-ink)}
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:10;display:flex;gap:6px;padding:7px;border-radius:99px;
+  background:rgba(15,15,15,.62);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(14px);max-width:calc(100% - 20px);animation:dockin .9s 1s cubic-bezier(.2,.9,.3,1.2) backwards}
+.dock button{width:42px;height:42px;flex:none;border:0;border-radius:50%;background:transparent;font-size:21px;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.6,.5,1),background .2s}
+.dock button:hover{transform:translateY(-5px) scale(1.18)}.dock button[aria-pressed="true"]{background:rgba(255,255,255,.22)}
+.enter .copy>*{animation:up .8s cubic-bezier(.2,.8,.2,1) backwards}
+.enter .copy>:nth-child(2){animation-delay:.08s}.enter .copy>:nth-child(3){animation-delay:.16s}.enter .copy>:nth-child(4){animation-delay:.24s}
+.enter .disc{animation:pop .9s cubic-bezier(.2,1.3,.4,1) backwards,bob 8s .9s ease-in-out infinite}
+@keyframes drop{from{translate:0 -130%}}
+@keyframes sway{from{transform:rotate(-4.5deg)}to{transform:rotate(4.5deg)}}
+@keyframes halo{from{opacity:.4;transform:scale(.94)}to{opacity:.85;transform:scale(1.06)}}
+@keyframes twinkle{from{opacity:.45}to{opacity:1}}
+@keyframes flick{0%,100%{opacity:1}30%{opacity:.55}34%{opacity:1}70%{opacity:.8}}
+@keyframes moonrise{from{transform:translateY(60px) scale(.8);opacity:0}}
+@keyframes breathe{50%{transform:scale(1.03)}}
+@keyframes drift{to{transform:translate3d(2.5%,-2%,0) scale(1.05)}}
+@keyframes bob{50%{transform:translateY(-10px)}}
+@keyframes turn{to{transform:rotate(360deg)}}
+@keyframes rise{from{transform:translateY(40%);opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+@keyframes pop{from{opacity:0;transform:scale(.7) rotate(-12deg)}}
+@keyframes dockin{from{transform:translate(-50%,90px)}}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.plate{order:-1}.menu{display:none}.shelf{grid-template-columns:1fr}.item+.item{padding-left:0;border-left:0}.lanterns i:nth-child(3),.lanterns i:nth-child(4){display:none}.tag{left:0}.hdr{margin-top:var(--hdr-top-m,90px)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important}.fx{display:none}}
+
+[data-theme="tet"],[data-theme="nguyen-tieu"],[data-theme="gio-to"],[data-theme="trung-thu"]{--hdr-top:140px;--hdr-top-m:130px}
+[data-theme="giang-sinh"],[data-theme="phu-nu"]{--hdr-top:84px;--hdr-top-m:84px}
+/* video/GIF overlay tùy chọn: thả clip nền đen vào assets/overlay-<theme>.webm|mp4, trộn kiểu screen */
+.bgvideo{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;mix-blend-mode:screen;opacity:.85;pointer-events:none}
