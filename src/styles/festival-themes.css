@@ -1,211 +1,1114 @@
 /* ==========================================================================
+   MAVRYK ANIME 24 - 24 DISPLAY TYPOGRAPHY & NOTO FONTS
+   Full Vietnamese diacritics support & lazy loaded via woff
+   ========================================================================== */
+@font-face {
+  font-family: "AnimeSans";
+  src: url("/assets/fonts/noto-sans.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "AnimeSans";
+  src: url("/assets/fonts/noto-sans-bold.woff") format("woff");
+  font-weight: 600 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "AnimeSerif";
+  src: url("/assets/fonts/noto-serif.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 01";
+  src: url("/assets/fonts/display-01.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 02";
+  src: url("/assets/fonts/display-02.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 03";
+  src: url("/assets/fonts/display-03.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 04";
+  src: url("/assets/fonts/display-04.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 05";
+  src: url("/assets/fonts/display-05.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 06";
+  src: url("/assets/fonts/display-06.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 07";
+  src: url("/assets/fonts/display-07.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 08";
+  src: url("/assets/fonts/display-08.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 09";
+  src: url("/assets/fonts/display-09.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 10";
+  src: url("/assets/fonts/display-10.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 11";
+  src: url("/assets/fonts/display-11.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 12";
+  src: url("/assets/fonts/display-12.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 13";
+  src: url("/assets/fonts/display-13.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 14";
+  src: url("/assets/fonts/display-14.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 15";
+  src: url("/assets/fonts/display-15.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 16";
+  src: url("/assets/fonts/display-16.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 17";
+  src: url("/assets/fonts/display-17.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 18";
+  src: url("/assets/fonts/display-18.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 19";
+  src: url("/assets/fonts/display-19.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 20";
+  src: url("/assets/fonts/display-20.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 21";
+  src: url("/assets/fonts/display-21.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 22";
+  src: url("/assets/fonts/display-22.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 23";
+  src: url("/assets/fonts/display-23.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Mavryk Display 24";
+  src: url("/assets/fonts/display-24.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ==========================================================================
    FESTIVAL THEMES STYLESHEET - MAVRYK OTP PORTAL
-   Kế thừa kiến trúc từ source le-hoi-themes của Master
+   Living Animated Multi-Layer Engine & 24 Festivals of Vietnam
+   Zero-Scroll Viewport Standard
    ========================================================================== */
 
-/* 1. TẾT CỔ TRUYỀN */
-[data-theme="tet"] {
-  --display: "Playfair Display", Georgia, serif;
-  --bg1: #8e1118;
-  --bg2: #250305;
-  --bg-art: radial-gradient(ellipse at 50% -10%, rgba(255, 200, 100, .32), transparent 60%);
-  --ink: #fff4db;
-  --soft: rgba(255, 244, 219, .82);
-  --line: rgba(247, 201, 72, .35);
-  --accent: #f7c948;
-  --panel: rgba(54, 4, 8, .75);
-  --btn: linear-gradient(180deg, #ffd96a, #d99a1c);
-  --btn-ink: #52080c;
-  --glow: rgba(247, 201, 72, .45);
-  --ground: #160204;
-  --lan-a: #ff5a3c;
-  --lan-b: #a80f0f;
-  --lan-glow: rgba(255, 110, 60, .55);
+/* 0. GLOBAL RESET & ZERO-SCROLL GUARANTEE */
+html,
+body {
+  height: 100% !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-[data-theme="tet"] .festival-lanterns { display: block !important; }
-[data-theme="tet"] #g-dinh { display: block !important; }
 
-/* 2. GIỖ TỔ HÙNG VƯƠNG */
+#root {
+  height: 100% !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+}
+
+/* Base Default Theme: Modern */
+:root,
+[data-theme="modern"] {
+  --display: "Mavryk Display 24", "Plus Jakarta Sans", system-ui, sans-serif;
+  --art: url("/assets/holidays/24.webp");
+  --font: "Plus Jakarta Sans", system-ui, sans-serif;
+  --bg1: #0b0f19;
+  --bg2: #030712;
+  --ink: #f8fafc;
+  --soft: rgba(241, 245, 249, 0.78);
+  --line: rgba(239, 68, 68, 0.35);
+  --accent: #f87171;
+  --panel: rgba(15, 23, 42, 0.85);
+  --btn: linear-gradient(180deg, #ef4444, #b91c1c);
+  --btn-ink: #ffffff;
+  --glow: rgba(239, 68, 68, 0.45);
+  --lan-glow: rgba(239, 68, 68, 0.45);
+  --moon-glow: rgba(56, 189, 248, 0.4);
+  color-scheme: dark;
+}
+
+/* ========================================================================== */
+/* KHỐI 1: MÙA XUÂN (XUÂN KHỞI SẮC & TÌNH YÊU)                                */
+/* ========================================================================== */
+
+/* 1. Tết Dương Lịch */
+[data-theme="tet-duong-lich"] {
+  --display: "Mavryk Display 01", "Cinzel", Georgia, serif;
+  --art: url("/assets/holidays/01.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #1e1b4b;
+  --bg2: #050518;
+  --ink: #fef08a;
+  --soft: rgba(254, 240, 138, 0.8);
+  --line: rgba(234, 179, 8, 0.4);
+  --accent: #facc15;
+  --panel: rgba(24, 18, 56, 0.86);
+  --btn: linear-gradient(180deg, #facc15, #ca8a04);
+  --btn-ink: #3a2200;
+  --glow: rgba(250, 204, 21, 0.45);
+}
+
+/* 2. Tết Ông Công Ông Táo */
+[data-theme="ong-tao"] {
+  --display: "Mavryk Display 02", "Playfair Display", Georgia, serif;
+  --art: url("/assets/holidays/02.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #7c2d12;
+  --bg2: #1e0b04;
+  --ink: #ffedd5;
+  --soft: rgba(255, 237, 213, 0.82);
+  --line: rgba(249, 115, 22, 0.4);
+  --accent: #fb923c;
+  --panel: rgba(38, 14, 6, 0.86);
+  --btn: linear-gradient(180deg, #fb923c, #c2410c);
+  --btn-ink: #2a0800;
+  --glow: rgba(251, 146, 60, 0.45);
+}
+
+/* 3. Tết Cổ Truyền (Nguyên Đán) */
+[data-theme="tet"] {
+  --display: "Mavryk Display 03", "Playfair Display", Georgia, serif;
+  --art: url("/assets/holidays/03.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #881337;
+  --bg2: #21040a;
+  --ink: #fff4db;
+  --soft: rgba(255, 244, 219, 0.84);
+  --line: rgba(247, 201, 72, 0.42);
+  --accent: #f7c948;
+  --panel: rgba(45, 5, 12, 0.86);
+  --btn: linear-gradient(180deg, #ffd96a, #d99a1c);
+  --btn-ink: #4c050a;
+  --glow: rgba(247, 201, 72, 0.48);
+}
+
+/* 4. Lễ Tình Nhân Valentine */
+[data-theme="valentine"] {
+  --display: "Mavryk Display 04", "Cormorant Garamond", Georgia, serif;
+  --art: url("/assets/holidays/04.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #500724;
+  --bg2: #19020b;
+  --ink: #ffe4e6;
+  --soft: rgba(255, 228, 230, 0.85);
+  --line: rgba(244, 63, 94, 0.42);
+  --accent: #fb7185;
+  --panel: rgba(43, 4, 18, 0.86);
+  --btn: linear-gradient(180deg, #fb7185, #e11d48);
+  --btn-ink: #ffffff;
+  --glow: rgba(251, 113, 133, 0.48);
+}
+
+/* 5. Tết Nguyên Tiêu (Rằm Tháng Giêng) */
+[data-theme="nguyen-tieu"] {
+  --display: "Mavryk Display 05", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/05.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #4c1d95;
+  --bg2: #130728;
+  --ink: #fdf4ff;
+  --soft: rgba(253, 244, 255, 0.82);
+  --line: rgba(216, 180, 254, 0.4);
+  --accent: #e9d5ff;
+  --panel: rgba(30, 10, 60, 0.86);
+  --btn: linear-gradient(180deg, #c084fc, #9333ea);
+  --btn-ink: #ffffff;
+  --glow: rgba(192, 132, 252, 0.45);
+}
+
+/* 6. Quốc Tế Phụ Nữ 8/3 */
+[data-theme="quoc-te-phu-nu"] {
+  --display: "Mavryk Display 06", "Cormorant Garamond", Georgia, serif;
+  --art: url("/assets/holidays/06.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #581c87;
+  --bg2: #1a052e;
+  --ink: #faf5ff;
+  --soft: rgba(250, 245, 255, 0.85);
+  --line: rgba(232, 121, 249, 0.42);
+  --accent: #f0abfc;
+  --panel: rgba(35, 8, 62, 0.86);
+  --btn: linear-gradient(180deg, #e879f9, #c026d3);
+  --btn-ink: #ffffff;
+  --glow: rgba(232, 121, 249, 0.45);
+}
+
+/* 7. Tết Hàn Thực */
+[data-theme="han-thuc"] {
+  --display: "Mavryk Display 07", "Playfair Display", Georgia, serif;
+  --art: url("/assets/holidays/07.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #134e4a;
+  --bg2: #041a18;
+  --ink: #ccfbf1;
+  --soft: rgba(204, 251, 241, 0.82);
+  --line: rgba(45, 212, 191, 0.4);
+  --accent: #5eead4;
+  --panel: rgba(7, 34, 32, 0.86);
+  --btn: linear-gradient(180deg, #5eead4, #0d9488);
+  --btn-ink: #042f2e;
+  --glow: rgba(94, 234, 212, 0.45);
+}
+
+/* 8. Giỗ Tổ Hùng Vương */
 [data-theme="gio-to"] {
-  --display: "Noto Serif Display", Georgia, serif;
+  --display: "Mavryk Display 08", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/08.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
   --bg1: #701410;
-  --bg2: #1e0302;
-  --bg-art: repeating-conic-gradient(from 0deg at 50% -8%, rgba(227, 176, 75, .12) 0 3deg, transparent 3deg 12deg);
+  --bg2: #1a0302;
   --ink: #f6ecd4;
-  --soft: rgba(246, 236, 212, .8);
-  --line: rgba(227, 176, 75, .38);
+  --soft: rgba(246, 236, 212, 0.84);
+  --line: rgba(227, 176, 75, 0.42);
   --accent: #e3b04b;
-  --panel: rgba(34, 4, 3, .78);
-  --ground: #12100a;
+  --panel: rgba(36, 6, 5, 0.86);
   --btn: linear-gradient(180deg, #f6dc9a, #d29a2f);
   --btn-ink: #3b0a06;
-  --glow: rgba(227, 176, 75, .42);
-  --lan-a: #ee4a38;
-  --lan-b: #8a120c;
-  --lan-glow: rgba(230, 80, 50, .5);
+  --glow: rgba(227, 176, 75, 0.45);
 }
-[data-theme="gio-to"] .festival-lanterns { display: block !important; }
-[data-theme="gio-to"] #g-dinh { display: block !important; }
-[data-theme="gio-to"] .festival-lanterns i:nth-child(n+4) { display: none !important; }
 
-/* 3. TẾT TRUNG THU */
+/* ========================================================================== */
+/* KHỐI 2: MÙA HẠ (HẠ RỰC RỠ & LAO ĐỘNG — ĐOAN NGỌ)                          */
+/* ========================================================================== */
+
+/* 9. Đại Lễ Thống Nhất 30/4 */
+[data-theme="thong-nhat"] {
+  --display: "Mavryk Display 09", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/09.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #7f1d1d;
+  --bg2: #1e0505;
+  --ink: #fef08a;
+  --soft: rgba(254, 240, 138, 0.84);
+  --line: rgba(234, 179, 8, 0.45);
+  --accent: #facc15;
+  --panel: rgba(38, 5, 5, 0.86);
+  --btn: linear-gradient(180deg, #facc15, #ca8a04);
+  --btn-ink: #3b0a06;
+  --glow: rgba(250, 204, 21, 0.5);
+}
+
+/* 10. Quốc Tế Lao Động 1/5 */
+[data-theme="lao-dong"] {
+  --display: "Mavryk Display 10", "Plus Jakarta Sans", system-ui, sans-serif;
+  --art: url("/assets/holidays/10.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #92400e;
+  --bg2: #240e02;
+  --ink: #fef3c7;
+  --soft: rgba(254, 243, 199, 0.82);
+  --line: rgba(245, 158, 11, 0.4);
+  --accent: #fbbf24;
+  --panel: rgba(42, 18, 3, 0.86);
+  --btn: linear-gradient(180deg, #fbbf24, #d97706);
+  --btn-ink: #291202;
+  --glow: rgba(251, 191, 36, 0.45);
+}
+
+/* 11. Đại Lễ Phật Đản (Vesak) */
+[data-theme="phat-dan"] {
+  --display: "Mavryk Display 11", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/11.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #78350f;
+  --bg2: #1a0a02;
+  --ink: #fffbeb;
+  --soft: rgba(255, 251, 235, 0.85);
+  --line: rgba(251, 191, 36, 0.42);
+  --accent: #fde68a;
+  --panel: rgba(38, 16, 4, 0.86);
+  --btn: linear-gradient(180deg, #fde68a, #d97706);
+  --btn-ink: #3b1802;
+  --glow: rgba(253, 230, 138, 0.48);
+}
+
+/* 12. Quốc Tế Thiếu Nhi 1/6 */
+[data-theme="thieu-nhi"] {
+  --display: "Mavryk Display 12", "Lobster", cursive, sans-serif;
+  --art: url("/assets/holidays/12.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #0369a1;
+  --bg2: #021a29;
+  --ink: #e0f2fe;
+  --soft: rgba(224, 242, 254, 0.85);
+  --line: rgba(56, 189, 248, 0.4);
+  --accent: #38bdf8;
+  --panel: rgba(5, 34, 53, 0.86);
+  --btn: linear-gradient(180deg, #38bdf8, #0284c7);
+  --btn-ink: #04253a;
+  --glow: rgba(56, 189, 248, 0.45);
+}
+
+/* 13. Tết Đoan Ngọ (5/5 ÂL) */
+[data-theme="doan-ngo"] {
+  --display: "Mavryk Display 13", "Playfair Display", Georgia, serif;
+  --art: url("/assets/holidays/13.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #14532d;
+  --bg2: #04190d;
+  --ink: #dcfce7;
+  --soft: rgba(220, 252, 231, 0.82);
+  --line: rgba(74, 222, 128, 0.4);
+  --accent: #86efac;
+  --panel: rgba(8, 38, 20, 0.86);
+  --btn: linear-gradient(180deg, #86efac, #16a34a);
+  --btn-ink: #052e16;
+  --glow: rgba(134, 239, 172, 0.45);
+}
+
+/* 14. Ngày Gia Đình Việt Nam */
+[data-theme="gia-dinh"] {
+  --display: "Mavryk Display 14", "Plus Jakarta Sans", system-ui, sans-serif;
+  --art: url("/assets/holidays/14.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #1e3a8a;
+  --bg2: #060e24;
+  --ink: #dbeafe;
+  --soft: rgba(219, 234, 254, 0.82);
+  --line: rgba(96, 165, 250, 0.4);
+  --accent: #93c5fd;
+  --panel: rgba(10, 24, 64, 0.86);
+  --btn: linear-gradient(180deg, #60a5fa, #2563eb);
+  --btn-ink: #081d4a;
+  --glow: rgba(96, 165, 250, 0.45);
+}
+
+/* ========================================================================== */
+/* KHỐI 3: MÙA THU (THU ĐOÀN VIÊN & THẤT TỊCH — TRI ÂN)                      */
+/* ========================================================================== */
+
+/* 15. Lễ Thất Tịch (7/7 ÂL) */
+[data-theme="that-tich"] {
+  --display: "Mavryk Display 15", "Cormorant Garamond", Georgia, serif;
+  --art: url("/assets/holidays/15.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #2e1065;
+  --bg2: #0b031c;
+  --ink: #ede9fe;
+  --soft: rgba(237, 233, 254, 0.84);
+  --line: rgba(167, 139, 250, 0.42);
+  --accent: #c4b5fd;
+  --panel: rgba(22, 7, 52, 0.86);
+  --btn: linear-gradient(180deg, #a78bfa, #7c3aed);
+  --btn-ink: #1e0942;
+  --glow: rgba(167, 139, 250, 0.48);
+}
+
+/* 16. Đại Lễ Vu Lan Báo Hiếu */
+[data-theme="vu-lan"] {
+  --display: "Mavryk Display 16", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/16.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #701a75;
+  --bg2: #1e0420;
+  --ink: #fae8ff;
+  --soft: rgba(250, 232, 255, 0.84);
+  --line: rgba(232, 121, 249, 0.4);
+  --accent: #f0abfc;
+  --panel: rgba(45, 8, 48, 0.86);
+  --btn: linear-gradient(180deg, #f0abfc, #a21caf);
+  --btn-ink: #2b042e;
+  --glow: rgba(240, 171, 252, 0.45);
+}
+
+/* 17. Đại Lễ Quốc Khánh 2/9 */
+[data-theme="quoc-khanh"] {
+  --display: "Mavryk Display 17", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/17.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #831843;
+  --bg2: #1f040e;
+  --ink: #fef08a;
+  --soft: rgba(254, 240, 138, 0.84);
+  --line: rgba(234, 179, 8, 0.45);
+  --accent: #facc15;
+  --panel: rgba(46, 6, 21, 0.86);
+  --btn: linear-gradient(180deg, #facc15, #ca8a04);
+  --btn-ink: #3b0a06;
+  --glow: rgba(250, 204, 21, 0.5);
+}
+
+/* 18. Tết Trung Thu (15/8 ÂL) */
 [data-theme="trung-thu"] {
-  --display: "Lobster", Georgia, serif;
+  --display: "Mavryk Display 18", "Lobster", Georgia, serif;
+  --art: url("/assets/holidays/18.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
   --bg1: #35135c;
   --bg2: #0e0422;
-  --bg-art: radial-gradient(circle at 82% 16%, rgba(255, 211, 107, .25), transparent 45%);
   --ink: #fff0d8;
-  --soft: rgba(255, 240, 216, .84);
-  --line: rgba(255, 169, 77, .38);
+  --soft: rgba(255, 240, 216, 0.84);
+  --line: rgba(255, 169, 77, 0.42);
   --accent: #ffa94d;
-  --panel: rgba(43, 15, 77, .72);
-  --ground: #0a0218;
+  --panel: rgba(32, 10, 60, 0.86);
   --btn: linear-gradient(180deg, #ffb25e, #ec7f1c);
   --btn-ink: #2a0d00;
-  --glow: rgba(255, 169, 77, .45);
-  --moon-a: #fff6cf;
-  --moon-b: #ffc94f;
-  --moon-glow: rgba(255, 200, 80, .36);
-  --lan-a: #ffbb66;
-  --lan-b: #e0501c;
-  --lan-glow: rgba(255, 150, 60, .55);
+  --glow: rgba(255, 169, 77, 0.48);
 }
-[data-theme="trung-thu"] .festival-moon, [data-theme="trung-thu"] .festival-lanterns { display: block !important; }
-[data-theme="trung-thu"] #g-house { display: block !important; }
-[data-theme="trung-thu"] .festival-lanterns i:nth-child(-n+3) { display: none !important; }
 
-/* 4. HALLOWEEN */
-[data-theme="halloween"] {
-  --display: "Cinzel", Georgia, serif;
-  --bg1: #1c0b2e;
-  --bg2: #06020d;
-  --bg-art: radial-gradient(circle at 75% 20%, rgba(255, 120, 30, .2), transparent 50%);
-  --ink: #faebdc;
-  --soft: rgba(250, 235, 220, .78);
-  --line: rgba(255, 120, 30, .38);
-  --accent: #ff7518;
-  --panel: rgba(24, 9, 38, .8);
-  --ground: #05010a;
-  --btn: linear-gradient(180deg, #ff8c3b, #d95507);
-  --btn-ink: #1a0500;
-  --glow: rgba(255, 120, 30, .45);
-  --moon-a: #ffb066;
-  --moon-b: #cc4e00;
-  --moon-glow: rgba(255, 120, 30, .42);
-}
-[data-theme="halloween"] .festival-moon { display: block !important; }
-[data-theme="halloween"] #g-house { display: block !important; }
-
-/* 5. GIÁNG SINH */
-[data-theme="giang-sinh"] {
-  --display: "Playfair Display", Georgia, serif;
-  --bg1: #0a2618;
-  --bg2: #020f09;
-  --bg-art: radial-gradient(circle at 50% 10%, rgba(220, 50, 50, .22), transparent 60%);
-  --ink: #eafaf1;
-  --soft: rgba(234, 250, 241, .85);
-  --line: rgba(235, 87, 87, .38);
-  --accent: #eb5757;
-  --panel: rgba(8, 30, 20, .78);
-  --ground: #03140c;
-  --btn: linear-gradient(180deg, #f05454, #bd2121);
-  --btn-ink: #ffffff;
-  --glow: rgba(235, 87, 87, .45);
-}
-[data-theme="giang-sinh"] #g-pine { display: block !important; }
-
-/* 6. NGÀY PHỤ NỮ */
-[data-theme="phu-nu"] {
-  --display: "Cormorant Garamond", Georgia, serif;
+/* 19. Ngày Phụ Nữ Việt Nam 20/10 */
+[data-theme="phu-nu-vn"] {
+  --display: "Mavryk Display 19", "Cormorant Garamond", Georgia, serif;
+  --art: url("/assets/holidays/19.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
   --bg1: #4a1232;
   --bg2: #180310;
-  --bg-art: radial-gradient(circle at 50% 15%, rgba(255, 150, 190, .25), transparent 55%);
   --ink: #fff0f6;
-  --soft: rgba(255, 240, 246, .85);
-  --line: rgba(255, 140, 185, .38);
+  --soft: rgba(255, 240, 246, 0.85);
+  --line: rgba(255, 140, 185, 0.4);
   --accent: #ff85b3;
-  --panel: rgba(50, 10, 34, .76);
-  --ground: #14020d;
+  --panel: rgba(38, 6, 25, 0.86);
   --btn: linear-gradient(180deg, #ff85b3, #d94179);
   --btn-ink: #ffffff;
-  --glow: rgba(255, 133, 179, .45);
-}
-[data-theme="phu-nu"] #g-house { display: block !important; }
-
-/* CÁC PHẦN TỬ SCENE CHUNG */
-.festival-moon {
-  position: fixed;
-  right: clamp(4%, 7vw, 12%);
-  top: clamp(60px, 9vh, 110px);
-  width: clamp(110px, 15vw, 180px);
-  height: auto;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  z-index: 0;
-  box-shadow: 0 0 70px 24px var(--moon-glow, rgba(255,255,255,.3)), 0 0 160px 60px var(--moon-glow, rgba(255,255,255,.3));
-  animation: f-moonrise 2.4s cubic-bezier(.2,.8,.2,1) both, f-breathe 9s 2.4s ease-in-out infinite;
-  display: none;
-  pointer-events: none;
+  --glow: rgba(255, 133, 179, 0.45);
 }
 
-.festival-lanterns {
-  position: fixed;
-  inset: 0 0 auto;
-  height: 0;
-  z-index: 2;
-  pointer-events: none;
-  display: none;
+/* ========================================================================== */
+/* KHỐI 4: MÙA ĐÔNG (ĐÔNG ẤM ÁP & TÔN SƯ TRỌNG ĐẠO)                           */
+/* ========================================================================== */
+
+/* 20. Đêm Hội Halloween 31/10 */
+[data-theme="halloween"] {
+  --display: "Mavryk Display 20", "Cinzel", Georgia, serif;
+  --art: url("/assets/holidays/20.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #1c0b2e;
+  --bg2: #06020d;
+  --ink: #faebdc;
+  --soft: rgba(250, 235, 220, 0.8);
+  --line: rgba(255, 120, 30, 0.42);
+  --accent: #ff7518;
+  --panel: rgba(18, 6, 28, 0.86);
+  --btn: linear-gradient(180deg, #ff8c3b, #d95507);
+  --btn-ink: #1a0500;
+  --glow: rgba(255, 120, 30, 0.48);
 }
-.festival-lanterns i {
-  position: absolute;
-  top: 0;
-  left: var(--x);
-  width: 1.5px;
-  height: var(--len);
-  background: linear-gradient(rgba(255, 225, 160, .15), rgba(255, 225, 160, .75));
+
+/* 21. Ngày Nhà Giáo Việt Nam 20/11 */
+[data-theme="nha-giao"] {
+  --display: "Mavryk Display 21", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/21.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #0c4a6e;
+  --bg2: #031c2c;
+  --ink: #f0fdf4;
+  --soft: rgba(240, 253, 244, 0.82);
+  --line: rgba(234, 179, 8, 0.42);
+  --accent: #facc15;
+  --panel: rgba(6, 32, 48, 0.86);
+  --btn: linear-gradient(180deg, #facc15, #ca8a04);
+  --btn-ink: #032135;
+  --glow: rgba(250, 204, 21, 0.48);
+}
+
+/* 22. Ngày Thành Lập QĐND Việt Nam 22/12 */
+[data-theme="qdnd-vn"] {
+  --display: "Mavryk Display 22", "Noto Serif Display", Georgia, serif;
+  --art: url("/assets/holidays/22.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #14532d;
+  --bg2: #041b0e;
+  --ink: #fef08a;
+  --soft: rgba(254, 240, 138, 0.84);
+  --line: rgba(234, 179, 8, 0.42);
+  --accent: #facc15;
+  --panel: rgba(8, 38, 20, 0.86);
+  --btn: linear-gradient(180deg, #facc15, #ca8a04);
+  --btn-ink: #052e16;
+  --glow: rgba(250, 204, 21, 0.48);
+}
+
+/* 23. Đại Lễ Giáng Sinh Noel 24/12 */
+[data-theme="giang-sinh"] {
+  --display: "Mavryk Display 23", "Playfair Display", Georgia, serif;
+  --art: url("/assets/holidays/23.webp");
+  --font: "Be Vietnam Pro", system-ui, sans-serif;
+  --bg1: #0a2618;
+  --bg2: #020f09;
+  --ink: #eafaf1;
+  --soft: rgba(234, 250, 241, 0.85);
+  --line: rgba(235, 87, 87, 0.42);
+  --accent: #eb5757;
+  --panel: rgba(6, 24, 15, 0.86);
+  --btn: linear-gradient(180deg, #f05454, #bd2121);
+  --btn-ink: #ffffff;
+  --glow: rgba(235, 87, 87, 0.48);
+}
+
+/* ========================================================================== */
+/* CƠ CHẾ NỀN BODY CÔNG NGHỆ ÁNH SÁNG ĐỘNG (DYNAMIC AMBIENT LAYER)             */
+/* ========================================================================== */
+body {
+  font-family: var(--font, "Plus Jakarta Sans", sans-serif);
+  color: var(--ink);
+  background-image:
+    radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.78) 100%),
+    linear-gradient(180deg, var(--bg1), var(--bg2)) !important;
+  background-color: var(--bg2) !important;
+  position: relative;
+  transition: background 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ========================================================================== */
+/* GPU-ACCELERATED KEYFRAMES ANIMATIONS FOR LIVING DYNAMICS                   */
+/* ========================================================================== */
+
+/* Đèn lồng đung đưa tự nhiên */
+.lantern-cluster {
+  display: flex;
+  gap: 14px;
+}
+.lantern-1 {
   transform-origin: 50% 0;
-  animation: f-drop 1.5s cubic-bezier(.2,.9,.25,1.12) var(--dl) backwards, f-sway var(--d) ease-in-out var(--dl) infinite alternate;
+  animation: f-lantern-sway 4.8s ease-in-out infinite alternate;
 }
-.festival-lanterns i::before {
+.lantern-2 {
+  transform-origin: 50% 0;
+  animation: f-lantern-sway-2 5.6s 0.6s ease-in-out infinite alternate;
+}
+@keyframes f-lantern-sway {
+  0% { transform: rotate(-5deg); }
+  100% { transform: rotate(5deg); }
+}
+@keyframes f-lantern-sway-2 {
+  0% { transform: rotate(4deg); }
+  100% { transform: rotate(-4deg); }
+}
+
+/* Vầng trăng / Thiên thể thở hào quang */
+.celestial-pulse {
+  transform-origin: 50% 50%;
+  animation: f-celestial-pulse 7s ease-in-out infinite alternate;
+}
+@keyframes f-celestial-pulse {
+  0% { transform: scale(0.97); filter: drop-shadow(0 0 20px var(--glow)); }
+  100% { transform: scale(1.03); filter: drop-shadow(0 0 45px var(--glow)); }
+}
+
+/* Mây Á Đông trôi lướt ngang */
+.cloud-drift-fast {
+  animation: f-cloud-drift 12s ease-in-out infinite alternate;
+}
+@keyframes f-cloud-drift {
+  0% { transform: translateX(-12px); }
+  100% { transform: translateX(12px); }
+}
+
+/* Núi, Thỏ ngọc, Con đò nhấp nhô lượn sóng */
+.wave-float {
+  animation: f-wave-float 6s ease-in-out infinite alternate;
+}
+@keyframes f-wave-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-7px); }
+}
+
+/* Cờ Tổ Quốc phấp phới lượn sóng */
+.flag-fabric {
+  animation: f-flag-wave 3.2s ease-in-out infinite alternate;
+  transform-origin: 10px 10px;
+}
+@keyframes f-flag-wave {
+  0% { transform: skewY(-2deg) scaleY(0.98); }
+  100% { transform: skewY(2.5deg) scaleY(1.02); }
+}
+
+/* Trống đồng xoay chậm */
+.dongson-rotate-slow {
+  transform-origin: 50% 50%;
+  animation: f-dongson-rot 60s linear infinite;
+}
+@keyframes f-dongson-rot {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Chuông vàng đung đưa */
+.bell-sway {
+  transform-origin: 0 0;
+  animation: f-bell-sway 3.8s ease-in-out infinite alternate;
+}
+@keyframes f-bell-sway {
+  0% { transform: rotate(-8deg); }
+  100% { transform: rotate(8deg); }
+}
+
+/* Trái tim Valentine đập bồng bềnh */
+.heart-float-1 {
+  animation: f-heart-beat 2.4s ease-in-out infinite alternate;
+  transform-origin: 60px 45px;
+}
+.heart-float-2 {
+  animation: f-heart-beat 3s 0.5s ease-in-out infinite alternate;
+  transform-origin: 30px 65px;
+}
+@keyframes f-heart-beat {
+  0% { transform: scale(0.94) translateY(2px); }
+  100% { transform: scale(1.06) translateY(-4px); }
+}
+
+/* Xung điện tử Cyber */
+.cyber-line-pulse {
+  animation: f-cyber-flow 2s linear infinite;
+}
+@keyframes f-cyber-flow {
+  0% { stroke-dashoffset: 20; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* ========================================================================== */
+/* UI CONTROLS & DOCK SYSTEM                                                  */
+/* ========================================================================== */
+
+/* 6 Ô SỐ OTP TO RÕ NÉT */
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: clamp(6px, 2vw, 12px);
+  margin-top: 8px;
+  margin-bottom: 14px;
+}
+.otp-digit {
+  width: clamp(40px, 9vw, 56px);
+  height: clamp(50px, 11vw, 66px);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1.5px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display, "Noto Serif Display", serif);
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 800;
+  color: var(--accent);
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.75), 0 6px 20px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 0 12px var(--glow);
+  position: relative;
+  transition: transform 0.2s, border-color 0.2s;
+  cursor: pointer;
+  user-select: all;
+}
+.otp-digit:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+/* NÚT SAO CHÉP MÃ LỚN / CTA */
+.btn-cta {
+  width: 100%;
+  padding: 13px 22px;
+  border-radius: 99px;
+  border: none;
+  background: var(--btn);
+  color: var(--btn-ink);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px var(--glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s, filter 0.2s, box-shadow 0.2s;
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 30px var(--glow);
+}
+.btn-cta:active {
+  transform: scale(0.98);
+}
+
+/* THANH DOCK ĐIỀU HƯỚNG 24 LỄ HỘI CỦA MASTER */
+.main-stage {
+  transform: translateY(clamp(-42px, -4vh, -18px));
+}
+.festival-title-stage {
+  width: min(100%, 760px);
+  min-height: clamp(170px, 23vh, 260px);
+  margin-bottom: 2px;
+  padding: 20px 34px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.festival-title-stage::before,
+.festival-title-stage::after {
   content: "";
   position: absolute;
   left: 50%;
-  top: calc(100% + 40px * var(--s));
-  width: calc(190px * var(--s));
-  aspect-ratio: 1;
-  margin: calc(-95px * var(--s)) 0 0 calc(-95px * var(--s));
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--lan-glow, rgba(255,110,60,.55)), transparent 66%);
-  animation: f-halo 3.4s ease-in-out infinite alternate;
-}
-.festival-lanterns i svg {
-  position: absolute;
-  left: 50%;
-  top: 100%;
-  width: calc(56px * var(--s));
-  margin-left: calc(-28px * var(--s));
-  overflow: visible;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .45));
-}
-
-.festival-ground {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 25vh;
-  z-index: 1;
-  fill: var(--ground, #000);
-  color: var(--ground, #000);
   pointer-events: none;
-  animation: f-rise 1.6s .3s cubic-bezier(.2,.8,.2,1) backwards;
 }
-.festival-ground g { display: none; }
 
-@keyframes f-drop { from { translate: 0 -130%; } }
-@keyframes f-sway { from { transform: rotate(-4.5deg); } to { transform: rotate(4.5deg); } }
-@keyframes f-halo { from { opacity: .4; transform: scale(.94); } to { opacity: .85; transform: scale(1.06); } }
-@keyframes f-moonrise { from { transform: translateY(60px) scale(.8); opacity: 0; } }
-@keyframes f-breathe { 50% { transform: scale(1.03); } }
-@keyframes f-rise { from { transform: translateY(40%); opacity: 0; } }
+.festival-title-stage::before {
+  z-index: -2;
+  width: min(88%, 620px);
+  aspect-ratio: 2.8;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, var(--glow) 0%, transparent 68%);
+  filter: blur(22px);
+  opacity: 0.58;
+}
 
+.festival-title-stage::after {
+  z-index: -1;
+  width: min(94%, 710px);
+  height: 1px;
+  bottom: 26px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, var(--line) 22%, var(--accent) 50%, var(--line) 78%, transparent);
+  box-shadow: 0 0 18px var(--glow);
+}
+
+.festival-title-stage__inner {
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+.festival-title-stage__inner::before,
+.festival-title-stage__inner::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: clamp(26px, 10vw, 104px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent));
+  box-shadow: 0 0 12px var(--glow);
+}
+
+.festival-title-stage__inner::before {
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.festival-title-stage__inner::after {
+  right: 0;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+.festival-title-stage__title {
+  max-width: 13ch;
+  margin: 0 auto;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: clamp(2.75rem, 5.5vw, 4.85rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2), 0 8px 28px rgba(0, 0, 0, 0.7), 0 0 36px var(--glow);
+  animation: festival-title-reveal 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.festival-title-stage__subtitle {
+  margin: 14px auto 0;
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: clamp(0.78rem, 1.25vw, 1rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  text-wrap: balance;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+  animation: festival-subtitle-reveal 620ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes festival-title-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes festival-subtitle-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .main-stage {
+    transform: translateY(-14px);
+  }
+
+  .festival-title-stage {
+    min-height: clamp(116px, 18vh, 156px);
+    padding: 14px 20px 18px;
+  }
+
+  .festival-title-stage::after {
+    bottom: 14px;
+  }
+
+  .festival-title-stage__title {
+    max-width: 15ch;
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .festival-title-stage__subtitle {
+    max-width: 30ch;
+    margin-top: 10px;
+    letter-spacing: 0.07em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .festival-title-stage__title,
+  .festival-title-stage__subtitle {
+    animation: none;
+  }
+}
+.festival-dock-container {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  max-width: calc(100% - 20px);
+}
+
+.festival-season-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 99px;
+  background: rgba(10, 10, 14, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+}
+.season-tab-btn {
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.season-tab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+.season-tab-btn.active {
+  background: var(--btn);
+  color: var(--btn-ink);
+  box-shadow: 0 2px 10px var(--glow);
+}
+
+.festival-dock {
+  display: flex;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: rgba(14, 14, 18, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+  max-width: min(920px, calc(100vw - 24px));
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.festival-dock::-webkit-scrollbar {
+  display: none;
+}
+
+.dock-item {
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.dock-item:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1.5px);
+}
+.dock-item.active {
+  background: var(--btn);
+  color: var(--btn-ink);
+  font-weight: 800;
+  box-shadow: 0 4px 16px var(--glow);
+}
+
+/* BADGE LỄ HỘI */
+.festival-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--line);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+
+/* ==========================================================================
+   MAVRYK ANIME 24 - ART & SHADE LAYERS
+   ========================================================================== */
+.festival-art-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.festival-art-shade {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(9, 10, 25, 0.25) 0%, rgba(17, 16, 36, 0.72) 35%, rgba(17, 16, 36, 0.72) 65%, rgba(9, 10, 25, 0.25) 100%);
+}
