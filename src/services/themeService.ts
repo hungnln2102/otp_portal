@@ -1,9 +1,10 @@
 import { FestivalThemeType } from "../components/FestivalBackground";
 import { FESTIVAL_THEMES, ThemeMeta } from "../constants/festivalThemes";
 import { convertSolar2Lunar } from "../utils/lunarCalendar";
+import { resolveScheduledTheme, ThemeScheduleConfig } from "./themeSchedule";
 
-export interface PortalThemeConfig {
-  mode: "fixed" | "auto";
+export interface PortalThemeConfig extends ThemeScheduleConfig {
+  mode?: "fixed" | "auto";
   theme?: FestivalThemeType;
   updated_at?: string;
 }
@@ -168,6 +169,11 @@ export async function resolvePortalTheme(): Promise<FestivalThemeType> {
 
   if (remote?.mode === "fixed" && remote.theme && FESTIVAL_THEMES.some((t) => t.id === remote.theme)) {
     return remote.theme;
+  }
+
+  const scheduledTheme = remote ? resolveScheduledTheme(remote, new Date()) : null;
+  if (scheduledTheme && FESTIVAL_THEMES.some((t) => t.id === scheduledTheme)) {
+    return scheduledTheme;
   }
 
   return getAutoThemeByDate(new Date());
