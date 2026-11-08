@@ -153,6 +153,17 @@ export async function fetchRemoteThemeConfig(): Promise<PortalThemeConfig | null
  * 2. Nếu Admin để tự động (hoặc backend chưa online) -> Tự động nhận diện theo ngày lễ thực tế (kết hợp cả Âm & Dương lịch).
  */
 export async function resolvePortalTheme(): Promise<FestivalThemeType> {
+  // 0. Cho phép xem trước trực tiếp qua URL query param ?theme=... (tiện lợi cho Admin/Master test nhanh)
+  try {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const queryTheme = params.get("theme") as FestivalThemeType | null;
+      if (queryTheme && FESTIVAL_THEMES.some((t) => t.id === queryTheme)) {
+        return queryTheme;
+      }
+    }
+  } catch {}
+
   const remote = await fetchRemoteThemeConfig();
 
   if (remote?.mode === "fixed" && remote.theme && FESTIVAL_THEMES.some((t) => t.id === remote.theme)) {

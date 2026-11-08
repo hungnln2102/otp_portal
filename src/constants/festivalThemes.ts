@@ -19,11 +19,11 @@ export interface SeasonTabItem {
 }
 
 export const SEASON_TABS: SeasonTabItem[] = [
-  { id: "all", label: "Tất cả (24)" },
-  { id: "spring", label: "Xuân (8)" },
-  { id: "summer", label: "Hạ (6)" },
-  { id: "autumn", label: "Thu (5)" },
-  { id: "winter", label: "Đông (4)" },
+  { id: "all", label: "Tất cả (28)" },
+  { id: "spring", label: "Xuân (9)" },
+  { id: "summer", label: "Hạ (7)" },
+  { id: "autumn", label: "Thu (6)" },
+  { id: "winter", label: "Đông (5)" },
   { id: "modern", label: "Cyber Core" },
 ];
 
@@ -287,6 +287,50 @@ export const FESTIVAL_THEMES: ThemeMeta[] = [
     title: "Kết nối trong an tâm",
     subtitle: "Bảo vệ từng kết nối của bạn.",
     desc: "Cyber security anime: stylish anime female cyber guardian wearing futuristic black teal jacket far left, translucent cyan holographic shield and luminous electronic circuit architecture far right, neon violet cyan midnight futuristic city, sleek anime cel shading.",
+  },
+
+  // -------------------------------------------------------------
+  // 4 SEASONS ANIME (MOTION LAB)
+  // -------------------------------------------------------------
+  {
+    id: "season-spring",
+    season: "spring",
+    name: "Mùa Xuân Anime",
+    icon: "🌸",
+    badge: "Xuân Khởi Sắc",
+    title: "Xuân khởi sắc",
+    subtitle: "Bình minh dịu, cánh hoa và thung lũng anime.",
+    desc: "Bình minh dịu dàng, cánh hoa anh đào trôi bồng bềnh giữa thung lũng anime mơ mộng.",
+  },
+  {
+    id: "season-summer",
+    season: "summer",
+    name: "Mùa Hạ Anime",
+    icon: "☀️",
+    badge: "Hạ Rực Rỡ",
+    title: "Hạ rực rỡ",
+    subtitle: "Nắng xanh, đồng lúa và mặt nước yên.",
+    desc: "Nắng xanh rực rỡ, hạt sáng óng ánh, đồng lúa bao la và mặt nước phẳng lặng yên bình.",
+  },
+  {
+    id: "season-autumn",
+    season: "autumn",
+    name: "Mùa Thu Anime",
+    icon: "🍁",
+    badge: "Thu Đoàn Viên",
+    title: "Thu đoàn viên",
+    subtitle: "Phố cổ, nắng mật ong và sắc lá ấm.",
+    desc: "Phố cổ trầm mặc, ánh nắng hoàng hôn mật ong và những chiếc lá phong vàng rơi bay lãng mạn.",
+  },
+  {
+    id: "season-winter",
+    season: "winter",
+    name: "Mùa Đông Anime",
+    icon: "❄️",
+    badge: "Đông Ấm Áp",
+    title: "Đông ấm áp",
+    subtitle: "Làng núi, tuyết xanh và những ô cửa ấm.",
+    desc: "Ngôi làng phủ tuyết trắng tinh khôi, ánh đèn ấm áp từ những ô cửa sổ giữa mùa đông thanh bình.",
   },
 ];
 

@@ -5,6 +5,7 @@ import {
   AlertCircle,
   Sparkles,
   Film,
+  Bot,
   ShieldCheck,
 } from "lucide-react";
 import { FestivalBackground, FestivalThemeType } from "./components/FestivalBackground";
@@ -12,6 +13,7 @@ import { MainTab, ToastMessage } from "./types/otp";
 import { FestivalStage } from "./features/festivals/components/FestivalStage";
 import { AdobeSection } from "./features/adobe/components/AdobeSection";
 import { NetflixSection } from "./features/netflix/components/NetflixSection";
+import { GptSection } from "./features/gpt/components/GptSection";
 import { TwoFactorSection } from "./features/twoFactor/components/TwoFactorSection";
 import { FaqModal } from "./components/FaqModal";
 import {
@@ -19,13 +21,23 @@ import {
   resolvePortalTheme,
   getThemeMeta,
 } from "./services/themeService";
+import { syncPortalSlotsWithBackend } from "./services/otpService";
 import "./styles/festival-themes.css";
 
 export const App: React.FC = () => {
-  // Theme State: Khởi tạo ngay lập tức theo ngày lễ thực tế (Zero Flicker)
-  const [theme, setTheme] = useState<FestivalThemeType>(() => getAutoThemeByDate(new Date()));
+  // Theme State: Khởi tạo ngay lập tức theo URL param ?theme= hoặc ngày lễ thực tế (Zero Flicker)
+  const [theme, setTheme] = useState<FestivalThemeType>(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const queryTheme = params.get("theme") as FestivalThemeType | null;
+        if (queryTheme) return queryTheme;
+      }
+    } catch {}
+    return getAutoThemeByDate(new Date());
+  });
 
-  // Gọi ngầm cấu hình theme từ admin_orderlist (/api/public/theme) nếu Admin có cài đặt cố định
+  // Gọi ngầm cấu hình theme và đồng bộ danh mục ô input sang Backend
   useEffect(() => {
     let isMounted = true;
     resolvePortalTheme().then((resolvedTheme) => {
@@ -33,6 +45,8 @@ export const App: React.FC = () => {
         setTheme(resolvedTheme);
       }
     });
+    // Tự động thông báo cấu hình các ô input hiện có lên Backend & Admin
+    void syncPortalSlotsWithBackend();
     return () => {
       isMounted = false;
     };
@@ -46,6 +60,7 @@ export const App: React.FC = () => {
   // Cooldown Counters (seconds)
   const [adobeOtpCooldown, setAdobeOtpCooldown] = useState(0);
   const [netflixCooldown, setNetflixCooldown] = useState(0);
+  const [gptCooldown, setGptCooldown] = useState(0);
 
   // UI Helpers
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -57,6 +72,7 @@ export const App: React.FC = () => {
     const timer = setInterval(() => {
       setAdobeOtpCooldown((prev) => (prev > 0 ? prev - 1 : 0));
       setNetflixCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+      setGptCooldown((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -133,24 +149,24 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border border-[var(--line)]"
-              style={{ background: "rgba(0, 0, 0, 0.4)", color: "var(--soft)" }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse" />
-              <span>Hệ thống trực tuyến</span>
-            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border border-[var(--line)]"
+                style={{ background: "rgba(0, 0, 0, 0.4)", color: "var(--soft)" }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse" />
+                <span>Hệ thống trực tuyến</span>
+              </div>
 
-            <button
-              onClick={() => setShowFaqModal(true)}
-              className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
-              style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
-            >
-              <HelpCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
-              <span>Hướng Dẫn</span>
-            </button>
-          </div>
+              <button
+                onClick={() => setShowFaqModal(true)}
+                className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
+                <span>Hướng Dẫn</span>
+              </button>
+            </div>
         </div>
       </header>
 
@@ -207,6 +223,20 @@ export const App: React.FC = () => {
 
             <button
               type="button"
+              onClick={() => setActiveTab("gpt")}
+              className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg font-bold text-xs transition-all duration-200"
+              style={{
+                background: activeTab === "gpt" ? "var(--btn)" : "transparent",
+                color: activeTab === "gpt" ? "var(--btn-ink)" : "var(--soft)",
+                boxShadow: activeTab === "gpt" ? "0 2px 12px var(--glow)" : "none",
+              }}
+            >
+              <Bot className="w-3.5 h-3.5 shrink-0" />
+              <span>GPT</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab("two_factor")}
               className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg font-bold text-xs transition-all duration-200"
               style={{
@@ -220,7 +250,7 @@ export const App: React.FC = () => {
             </button>
           </div>
 
-          {/* Form Content: Adobe or Netflix or 2FA */}
+          {/* Form Content: Adobe or Netflix or GPT or 2FA */}
           {activeTab === "adobe" && (
             <AdobeSection
               cooldown={adobeOtpCooldown}
@@ -235,6 +265,16 @@ export const App: React.FC = () => {
             <NetflixSection
               cooldown={netflixCooldown}
               setCooldown={setNetflixCooldown}
+              showToast={showToast}
+              copiedKey={copiedKey}
+              copyToClipboard={copyToClipboard}
+            />
+          )}
+
+          {activeTab === "gpt" && (
+            <GptSection
+              cooldown={gptCooldown}
+              setCooldown={setGptCooldown}
               showToast={showToast}
               copiedKey={copiedKey}
               copyToClipboard={copyToClipboard}
