@@ -33,3 +33,23 @@ npm run dev
 npm run build
 ```
 
+---
+
+## 🚢 Hướng Dẫn Triển Khai Lên Máy Chủ (Production Deployment)
+
+Sử dụng script triển khai tự động `deploy.sh`:
+
+```bash
+# Phân quyền thực thi (chỉ cần chạy lần đầu)
+chmod +x deploy.sh
+
+# Chạy triển khai tiêu chuẩn (Git pull + build + sync web root + reload Nginx/PM2)
+./deploy.sh
+
+# Tùy chọn 1: Build và triển khai mã nguồn hiện tại không pull từ Git
+./deploy.sh --no-pull
+
+# Tùy chọn 2: Dọn sạch node_modules và build mới hoàn toàn
+./deploy.sh --clean
+```
+
