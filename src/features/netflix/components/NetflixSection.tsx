@@ -56,10 +56,14 @@ export const NetflixSection: React.FC<NetflixSectionProps> = ({
       if (netflixIndex === 0) {
         setHouseholdData(null);
         const res = await fetchNetflixHousehold(email);
-        if ((res.ok || res.success) && res.link) {
+        const link = res.link || (res as any).data?.link || res.extra_fields?.find((f) => f.key === "netflix_link")?.value;
+        const sentTime = res.sent_time || (res as any).data?.sent_time || res.extra_fields?.find((f) => f.key === "sent_time")?.value;
+
+        if ((res.ok || res.success) && link) {
           setHouseholdData({
-            link: res.link,
-            message: res.message || "Đã tìm thấy link xác minh hộ gia đình!",
+            link,
+            sent_time: sentTime,
+            message: res.message || "Đã lấy link xác minh hộ gia đình thành công!",
           });
           setCooldown(30);
           showToast("success", "Đã lấy link xác minh Household thành công!");
@@ -212,17 +216,33 @@ export const NetflixSection: React.FC<NetflixSectionProps> = ({
       {/* Kết Quả Netflix 0: Hộ gia đình */}
       {netflixIndex === 0 && householdData && (
         <div
-          className="mt-3 p-3.5 rounded-xl border border-[var(--line)] space-y-2 text-xs animate-in fade-in zoom-in-95 duration-200"
+          className="mt-3 p-4 rounded-xl border border-[var(--line)] space-y-3 text-xs animate-in fade-in zoom-in-95 duration-200"
           style={{ background: "rgba(0, 0, 0, 0.55)" }}
         >
-          <div className="flex items-center justify-between border-b border-[var(--line)] pb-2">
-            <span className="font-bold text-emerald-400 flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Link Xác Minh Hộ Gia Đình
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-2.5">
+            <span className="font-bold text-emerald-400 flex items-center gap-1.5 text-xs">
+              <CheckCircle2 className="w-4 h-4" /> Link Cập Nhật Netflix Household
+            </span>
+            <span className="text-[10px] text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-medium">
+              Vừa xong
             </span>
           </div>
 
-          <p className="text-[11px] text-[var(--soft)]">
-            Mở link bên dưới trên điện thoại hoặc máy tính đang kết nối cùng mạng Wi-Fi với TV của bạn:
+          {/* Mục Thời gian gửi (Sent) đã parse sang UTC+7 */}
+          {householdData.sent_time && (
+            <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-[var(--line)] bg-black/30">
+              <span className="text-[11px] text-[var(--soft)] flex items-center gap-1.5 font-medium">
+                <Clock className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                Thời gian gửi (Sent):
+              </span>
+              <span className="text-[11px] font-bold text-cyan-300 font-mono">
+                {householdData.sent_time}
+              </span>
+            </div>
+          )}
+
+          <p className="text-[11px] text-[var(--soft)] leading-relaxed">
+            Nhấn nút <strong className="text-white">"Nhận mã"</strong> bên dưới trên điện thoại hoặc máy tính đang kết nối cùng mạng Wi-Fi với TV của bạn:
           </p>
 
           <div className="flex gap-2 pt-1">
@@ -230,21 +250,25 @@ export const NetflixSection: React.FC<NetflixSectionProps> = ({
               href={householdData.link}
               target="_blank"
               rel="noreferrer"
-              className="btn-cta flex-1 flex items-center justify-center gap-1.5"
-              style={{ padding: "8px 12px" }}
+              className="btn-cta flex-1 flex items-center justify-center gap-2 py-2.5 px-4 font-bold text-xs"
+              style={{
+                background: "linear-gradient(135deg, #e50914 0%, #b81d24 100%)",
+                boxShadow: "0 4px 15px rgba(229, 9, 20, 0.4)",
+              }}
             >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Mở Link Xác Minh Ngay</span>
+              <ExternalLink className="w-4 h-4 shrink-0" />
+              <span>Nhận mã</span>
             </a>
 
             <button
               type="button"
               onClick={() => copyToClipboard(householdData.link, "household_link", "Đã sao chép link xác minh!")}
-              className="px-3 py-2 rounded-xl border border-[var(--line)] flex items-center gap-1 transition-all hover:brightness-125"
+              className="px-3.5 py-2.5 rounded-xl border border-[var(--line)] flex items-center gap-1.5 transition-all hover:brightness-125"
               style={{ background: "rgba(255, 255, 255, 0.08)" }}
               title="Sao chép link"
             >
-              <Copy className="w-3.5 h-3.5 text-[var(--accent)]" />
+              <Copy className="w-4 h-4 text-[var(--accent)] shrink-0" />
+              <span className="text-[11px] font-medium hidden sm:inline">Sao chép</span>
             </button>
           </div>
         </div>

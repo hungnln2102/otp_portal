@@ -171,7 +171,8 @@ export async function resolvePortalTheme(): Promise<FestivalThemeType> {
     return remote.theme;
   }
 
-  const scheduledTheme = remote ? resolveScheduledTheme(remote, new Date()) : null;
+  const targetSchedule = (remote && ((remote as any).schedule || remote)) as ThemeScheduleConfig | undefined;
+  const scheduledTheme = targetSchedule ? resolveScheduledTheme(targetSchedule, new Date()) : null;
   if (scheduledTheme && FESTIVAL_THEMES.some((t) => t.id === scheduledTheme)) {
     return scheduledTheme;
   }

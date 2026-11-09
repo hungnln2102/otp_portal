@@ -2,6 +2,7 @@ import { convertSolar2Lunar } from "../utils/lunarCalendar";
 import { FestivalThemeType } from "../components/FestivalBackground";
 
 export type ThemeCalendarType = "solar" | "lunar";
+export type ThemeBackgroundMode = "fixed_default" | "seasonal_4seasons";
 
 export interface ThemeDateRule {
   id: string;
@@ -22,6 +23,7 @@ export interface SeasonThemeRule {
 }
 
 export interface ThemeScheduleConfig {
+  backgroundMode?: ThemeBackgroundMode;
   defaultTheme?: FestivalThemeType;
   seasonRules?: SeasonThemeRule[];
   holidayRules?: ThemeDateRule[];
@@ -35,24 +37,29 @@ function isInRecurringRange(month: number, day: number, rule: ThemeDateRule): bo
 }
 
 export function resolveScheduledTheme(config: ThemeScheduleConfig, date: Date): FestivalThemeType | null {
-  if (!Array.isArray(config.holidayRules) || !Array.isArray(config.seasonRules)) return null;
   const bangkokDate = new Date(date.toLocaleDateString("en-US", { timeZone: "Asia/Bangkok" }));
   const solarDay = bangkokDate.getDate();
   const solarMonth = bangkokDate.getMonth() + 1;
   const lunar = convertSolar2Lunar(solarDay, solarMonth, bangkokDate.getFullYear());
 
-  const holiday = config.holidayRules.find((rule) => {
-    if (!rule.enabled) return false;
-    const month = rule.calendarType === "lunar" ? lunar.month : solarMonth;
-    const day = rule.calendarType === "lunar" ? lunar.day : solarDay;
-    return isInRecurringRange(month, day, rule);
-  });
-  if (holiday) return holiday.theme;
+  if (Array.isArray(config.holidayRules)) {
+    const holiday = config.holidayRules.find((rule) => {
+      if (!rule.enabled) return false;
+      const month = rule.calendarType === "lunar" ? lunar.month : solarMonth;
+      const day = rule.calendarType === "lunar" ? lunar.day : solarDay;
+      return isInRecurringRange(month, day, rule);
+    });
+    if (holiday) return holiday.theme;
+  }
 
-  const season = config.seasonRules.find((rule) => {
-    return rule.startMonth <= rule.endMonth
-      ? solarMonth >= rule.startMonth && solarMonth <= rule.endMonth
-      : solarMonth >= rule.startMonth || solarMonth <= rule.endMonth;
-  });
-  return season?.theme || config.defaultTheme || null;
+  if (config.backgroundMode === "seasonal_4seasons" || (!config.backgroundMode && Array.isArray(config.seasonRules))) {
+    const season = (config.seasonRules || []).find((rule) => {
+      return rule.startMonth <= rule.endMonth
+        ? solarMonth >= rule.startMonth && solarMonth <= rule.endMonth
+        : solarMonth >= rule.startMonth || solarMonth <= rule.endMonth;
+    });
+    if (season?.theme) return season.theme;
+  }
+
+  return config.defaultTheme || "modern";
 }

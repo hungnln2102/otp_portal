@@ -26,13 +26,22 @@ export async function fetchAdobeOtp(email: string): Promise<ApiResponse & { otp?
   return res.json();
 }
 
-export async function fetchNetflixHousehold(email: string): Promise<ApiResponse & { link?: string }> {
+export async function fetchNetflixHousehold(
+  email: string
+): Promise<ApiResponse & { link?: string; sent_time?: string; extra_fields?: Array<{ key: string; value: string; label: string }> }> {
   const res = await fetch("/api/public/otp/netflix/household", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: email.trim() }),
   });
-  return res.json();
+  const data = await res.json();
+  const link = data.link || data.data?.link || data.extra_fields?.find((f: any) => f.key === "netflix_link")?.value || null;
+  const sent_time = data.sent_time || data.data?.sent_time || data.extra_fields?.find((f: any) => f.key === "sent_time")?.value || null;
+  return {
+    ...data,
+    link,
+    sent_time,
+  };
 }
 
 export async function fetchNetflixSixDigit(email: string): Promise<ApiResponse & { code?: string }> {

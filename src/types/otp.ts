@@ -29,6 +29,7 @@ export interface GptOtpResult {
 
 export interface HouseholdResult {
   link: string;
+  sent_time?: string;
   message?: string;
   cooldown?: number;
 }
