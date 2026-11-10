@@ -1,5 +1,5 @@
 export type MainTab = "adobe" | "netflix" | "gpt" | "two_factor";
-export type AdobeSubForm = 0 | 1; // 0: Lấy tài khoản, 1: OTP
+export type AdobeSubForm = 0 | 1 | 2; // 0: Lấy tài khoản, 1: Kiểm tra tài khoản, 2: Nhận OTP
 export type NetflixSubForm = 0 | 1 | 2; // 0: Hộ gia đình, 1: Mã 6 số, 2: OTP Đăng Nhập
 
 export interface AccountResult {

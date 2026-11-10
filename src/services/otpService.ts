@@ -17,6 +17,15 @@ export async function fetchAdobeAccount(search: string): Promise<ApiResponse<Acc
   return res.json();
 }
 
+export async function fetchAdobeCheck(email: string): Promise<ApiResponse<AccountResult>> {
+  const res = await fetch("/api/public/otp/adobe/check", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email.trim(), search: email.trim(), input: email.trim() }),
+  });
+  return res.json();
+}
+
 export async function fetchAdobeOtp(email: string): Promise<ApiResponse & { otp?: string; duration_ms?: number }> {
   const res = await fetch("/api/public/otp/adobe/code", {
     method: "POST",

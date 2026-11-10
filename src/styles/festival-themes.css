@@ -1090,8 +1090,24 @@ body {
 
 
 /* ==========================================================================
-   MAVRYK ANIME 24 - ART & SHADE LAYERS
+   MAVRYK ANIME 24 - ART & SHADE LAYERS (SMART BLURRED BACKING CINEMATIC)
    ========================================================================== */
+.festival-art-ambient {
+  display: none;
+  position: fixed;
+  inset: -24px;
+  width: calc(100% + 48px);
+  height: calc(100% + 48px);
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) saturate(1.3) brightness(0.68);
+  transform: scale(1.08);
+  z-index: 0;
+  will-change: transform, opacity;
+  transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 .festival-art-layer {
   position: fixed;
   inset: 0;
@@ -1100,15 +1116,30 @@ body {
   pointer-events: none;
   background-size: cover;
   background-position: center;
-  z-index: 0;
+  z-index: 1;
   transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
 .festival-art-shade {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   background: linear-gradient(90deg, rgba(9, 10, 25, 0.25) 0%, rgba(17, 16, 36, 0.72) 35%, rgba(17, 16, 36, 0.72) 65%, rgba(9, 10, 25, 0.25) 100%);
+}
+
+@media (max-width: 768px), (orientation: portrait) {
+  .festival-art-ambient {
+    display: block;
+  }
+  .festival-art-layer {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top;
+  }
+  .festival-art-shade {
+    background: linear-gradient(180deg, rgba(9, 10, 25, 0.15) 0%, rgba(17, 16, 36, 0.55) 25%, rgba(17, 16, 36, 0.68) 75%, rgba(9, 10, 25, 0.4) 100%);
+  }
 }

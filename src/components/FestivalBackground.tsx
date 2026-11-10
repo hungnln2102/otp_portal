@@ -87,13 +87,18 @@ export const THEME_ART_MAP: Record<FestivalThemeType, ThemeArtInfo> = {
 
 /**
  * Xử lý URL tĩnh tương thích cả khi mount tại /otp/ hoặc root
+ * Hỗ trợ tự động phân giải ảnh dọc cho mobile (/assets/holidays/mobile/)
  */
-export const resolveArtUrl = (artPath: string): string => {
+export const resolveArtUrl = (artPath: string, isMobile = false): string => {
   if (!artPath) return "";
   if (artPath.startsWith("http")) return artPath;
+  let targetPath = artPath;
+  if (isMobile && targetPath.includes("/assets/holidays/")) {
+    targetPath = targetPath.replace("/assets/holidays/", "/assets/holidays/mobile/");
+  }
   const base = ((import.meta as any).env?.BASE_URL as string) || "/otp/";
   const cleanBase = base.endsWith("/") ? base : `${base}/`;
-  const cleanPath = artPath.startsWith("/") ? artPath.slice(1) : artPath;
+  const cleanPath = targetPath.startsWith("/") ? targetPath.slice(1) : targetPath;
   if (cleanPath.startsWith("otp/")) {
     return `/${cleanPath}`;
   }
@@ -306,8 +311,28 @@ interface FestivalBackgroundProps {
 
 export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Nhận diện màn hình Mobile / Portrait để tự động kích hoạt bộ tranh dọc 1080x1920
+  const checkIsMobile = () => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth <= 768 || (window.innerWidth < window.innerHeight && window.innerWidth <= 1024);
+  };
+  const [isMobile, setIsMobile] = useState<boolean>(checkIsMobile);
+
+  useEffect(() => {
+    const handleScreenChange = () => {
+      setIsMobile(checkIsMobile());
+    };
+    window.addEventListener("resize", handleScreenChange);
+    window.addEventListener("orientationchange", handleScreenChange);
+    return () => {
+      window.removeEventListener("resize", handleScreenChange);
+      window.removeEventListener("orientationchange", handleScreenChange);
+    };
+  }, []);
+
   const currentArt = THEME_ART_MAP[theme] || THEME_ART_MAP["tet"];
-  const resolvedArt = resolveArtUrl(currentArt.art);
+  const resolvedArt = resolveArtUrl(currentArt.art, isMobile);
   const [loadedArt, setLoadedArt] = useState<string>(resolvedArt);
   const [artOpacity, setArtOpacity] = useState<number>(1);
 
@@ -317,10 +342,10 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
     document.documentElement.style.setProperty("--accent", currentArt.accent);
   }, [theme, currentArt]);
 
-  // Preload và chuyển cảnh mượt mà giữa các tranh minh họa anime
+  // Preload và chuyển cảnh mượt mà giữa các tranh minh họa anime (hỗ trợ tự chuyển ngang/dọc)
   useEffect(() => {
     setArtOpacity(0.3);
-    const targetUrl = resolveArtUrl(currentArt.art);
+    const targetUrl = resolveArtUrl(currentArt.art, isMobile);
     const img = new Image();
     img.src = targetUrl;
     img.onload = () => {
@@ -328,10 +353,12 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       setArtOpacity(1);
     };
     img.onerror = () => {
-      setLoadedArt(targetUrl);
+      // Fallback an toàn về tranh gốc nếu có sự cố
+      const fallbackUrl = resolveArtUrl(currentArt.art, false);
+      setLoadedArt(fallbackUrl);
       setArtOpacity(1);
     };
-  }, [currentArt.art]);
+  }, [currentArt.art, isMobile]);
 
   // Canvas Engine: Tích hợp đầy đủ cả Thảm thực vật Anime (Lá phong, Hoa anh đào, Đom đóm, Tuyết tinh)
   // và Hiệu ứng điện ảnh bổ sung (God Rays, Bụi sáng lấp lánh, Bokeh rực rỡ)
@@ -354,7 +381,7 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
     const seasonKey = theme.replace("season-", "") as "spring" | "summer" | "autumn" | "winter";
 
     // 1. Thảm hạt tự nhiên (Foliage Particles)
-    const foliageCount = isSeasonalMode
+    const foliageBaseCount = isSeasonalMode
       ? seasonKey === "autumn"
         ? 34
         : seasonKey === "spring"
@@ -363,11 +390,16 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
         ? 24
         : 45
       : 0;
+    // Trên điện thoại giảm 50% số hạt để tiết kiệm pin và không che lấp form OTP
+    const foliageCount = isMobile ? Math.round(foliageBaseCount * 0.5) : foliageBaseCount;
+
+    const canvasVirtualW = isMobile ? 1080 : 1600;
+    const canvasVirtualH = isMobile ? 1920 : 900;
 
     const foliage = Array.from({ length: foliageCount }, () => ({
-      x: Math.random() * 1600,
-      y: Math.random() * 950 - 50,
-      size: 16 + Math.random() * 22,
+      x: Math.random() * canvasVirtualW,
+      y: Math.random() * (canvasVirtualH + 50) - 50,
+      size: (16 + Math.random() * 22) * (isMobile ? 0.85 : 1),
       vy: 0.55 + Math.random() * 1.1,
       vx: 0.15 + Math.random() * 0.45,
       rot: Math.random() * Math.PI * 2,
@@ -380,10 +412,11 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
     }));
 
     // 2. Bụi sáng lấp lánh (Shimmering Light Motes / Stardust)
-    const motes = Array.from({ length: 32 }, () => ({
-      x: Math.random() * 1600,
-      y: Math.random() * 900,
-      r: 1.2 + Math.random() * 2.2,
+    const motesCount = isMobile ? 16 : 32;
+    const motes = Array.from({ length: motesCount }, () => ({
+      x: Math.random() * canvasVirtualW,
+      y: Math.random() * canvasVirtualH,
+      r: (1.2 + Math.random() * 2.2) * (isMobile ? 0.85 : 1),
       vy: 0.15 + Math.random() * 0.35,
       phase: Math.random() * Math.PI * 2,
       twinkleSpeed: 1.5 + Math.random() * 2.5,
@@ -391,10 +424,11 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
     }));
 
     // 3. Bokeh Orbs chiều sâu (Depth of Field)
-    const bokehOrbs = Array.from({ length: 14 }, () => ({
-      x: Math.random() * 1600,
-      y: Math.random() * 900,
-      r: 25 + Math.random() * 55,
+    const bokehCount = isMobile ? 8 : 14;
+    const bokehOrbs = Array.from({ length: bokehCount }, () => ({
+      x: Math.random() * canvasVirtualW,
+      y: Math.random() * canvasVirtualH,
+      r: (25 + Math.random() * 55) * (isMobile ? 0.8 : 1),
       phase: Math.random() * Math.PI * 2,
       baseAlpha: 0.05 + Math.random() * 0.09,
       colorCore: currentArt.accent,
@@ -413,7 +447,13 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       if (!ctx) return;
 
       if (isSeasonalMode) {
-        ctx.setTransform(canvas.width / 1600, 0, 0, canvas.height / 900, 0, 0);
+        if (isMobile) {
+          // Uniform scale theo khung 1080x1920: giữ các hạt hoa/tuyết/lá tròn chuẩn xác
+          const scale = Math.max(canvas.width / 1080, canvas.height / 1920);
+          ctx.setTransform(scale, 0, 0, scale, (canvas.width - 1080 * scale) / 2, (canvas.height - 1920 * scale) / 2);
+        } else {
+          ctx.setTransform(canvas.width / 1600, 0, 0, canvas.height / 900, 0, 0);
+        }
       } else if (fxInstance) {
         if (currentArt.id === 1) {
           fxInstance.ctx.setTransform(canvas.width / 1600, 0, 0, canvas.height / 900, 0, 0);
@@ -446,7 +486,7 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       const HolidayEffects = (window as any).HolidayEffects;
       if (HolidayEffects?.Effects) {
         fxInstance = new HolidayEffects.Effects(canvas);
-        fxInstance.amount = 0.85;
+        fxInstance.amount = isMobile ? 0.45 : 0.85;
         fxInstance.setTheme({ id: currentArt.id, slug: currentArt.slug, name: currentArt.name });
       }
       handleResize();
@@ -548,13 +588,15 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
             p.rot += p.rotSpeed;
             p.flip += p.flipSpeed;
 
-            // Tái tuần hoàn mượt mà khi rơi hết màn hình
-            if (p.y > 940) {
+            // Tái tuần hoàn mượt mà khi rơi hết màn hình (tự thích ứng khung dọc 1080x1920 hoặc khung ngang 1600x900)
+            const maxY = isMobile ? 1960 : 940;
+            const maxX = isMobile ? 1120 : 1650;
+            if (p.y > maxY) {
               p.y = -40;
-              p.x = Math.random() * 1650 - 50;
+              p.x = Math.random() * maxX - 50;
             }
-            if (p.x > 1650) p.x = -30;
-            if (p.x < -40) p.x = 1640;
+            if (p.x > maxX) p.x = -30;
+            if (p.x < -40) p.x = maxX - 10;
 
             ctx.save();
             ctx.translate(p.x, p.y);
@@ -601,8 +643,8 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
             m.y -= m.vy;
             m.x += Math.sin(time * 0.5 + m.phase) * 0.3;
             if (m.y < -20) {
-              m.y = 920;
-              m.x = Math.random() * 1600;
+              m.y = isMobile ? 1940 : 920;
+              m.x = Math.random() * (isMobile ? 1080 : 1600);
             }
             const mAlpha = (0.2 + 0.7 * Math.abs(Math.sin(time * m.twinkleSpeed + m.phase))) * m.baseAlpha;
             ctx.save();
@@ -635,13 +677,23 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
     };
-  }, [theme, currentArt]);
+  }, [theme, currentArt, isMobile]);
 
   return (
     <>
-      {/* 1. LỚP TRANH MINH HỌA ANIME ĐỘC QUYỀN (GOM CHUNG VÀO /assets/holidays/) */}
+      {/* 0. LỚP AMBIENT BACKDROP MỜ ẢO (SMART BLURRED BACKING TỰ THÍCH ỨNG MỌI MẪU ĐIỆN THOẠI) */}
       <div
-        className="festival-art-layer fixed inset-0 w-full h-full pointer-events-none z-0 transition-opacity duration-700 ease-out"
+        className="festival-art-ambient fixed inset-0 pointer-events-none z-0 transition-opacity duration-700 ease-out"
+        style={{
+          backgroundImage: `url("${loadedArt}")`,
+          opacity: artOpacity,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* 1. LỚP TRANH MINH HỌA ANIME CHÍNH (GIỮ 100% NÉT CĂNG & KHÔNG BỊ CẮT XÉN) */}
+      <div
+        className="festival-art-layer fixed inset-0 w-full h-full pointer-events-none z-[1] transition-opacity duration-700 ease-out"
         style={{
           backgroundImage: `url("${loadedArt}")`,
           opacity: artOpacity,
@@ -651,13 +703,13 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       {/* 2. LỚP PHỦ TƯƠNG PHẢN ĐA TẦNG (SHADE OVERLAY):
              Tôn vinh nhân vật anime 2 bên sườn & Giữ form trung tâm siêu nét */}
       <div
-        className="festival-art-shade fixed inset-0 w-full h-full pointer-events-none z-[1]"
+        className="festival-art-shade fixed inset-0 w-full h-full pointer-events-none z-[2]"
       />
 
       {/* 3. CANVAS ENGINE HIỆU ỨNG TƯƠNG TÁC 60FPS (VOLUMETRIC GOD RAYS, LÁ PHONG 3D, SAKURA NOTCH, STARDUST, BOKEH) */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 w-full h-full pointer-events-none z-[2]"
+        className="fixed inset-0 w-full h-full pointer-events-none z-[3]"
         aria-hidden="true"
       />
     </>
