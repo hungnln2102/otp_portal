@@ -17,6 +17,7 @@ import {
 import { AccountResult, OtpResult, AdobeSubForm } from "../../../types/otp";
 import { fetchAdobeAccount, fetchAdobeOtp, fetchAdobeCheck } from "../../../services/otpService";
 import { OtpPinDisplay } from "../../../components/OtpPinDisplay";
+import { AccountStatusView } from "../../../components/account-status";
 
 interface AdobeSectionProps {
   cooldown: number;
@@ -87,9 +88,20 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
       const res = await fetchAdobeCheck(email);
       if (res.success && res.data) {
         setCheckData(res.data);
-        showToast("success", "Đã kiểm tra trạng thái tài khoản Adobe!");
+        if (res.data.status_type === "inactive") {
+          showToast("info", "Tài khoản cần chuyển sang team mới.");
+        } else if (res.data.status_type === "not_found") {
+          showToast("error", "Không tìm thấy tài khoản trong danh sách đơn hàng.");
+        } else {
+          showToast("success", "Đã kiểm tra trạng thái tài khoản Adobe!");
+        }
       } else {
-        showToast("error", res.error || res.message || "Không tìm thấy thông tin bản quyền cho tài khoản này.");
+        setCheckData({
+          account: email,
+          status: "KHÔNG TỒN TẠI",
+          status_type: "not_found",
+        });
+        showToast("error", res.error || res.message || "Không tìm thấy tài khoản trong danh sách đơn hàng.");
       }
     } catch (err: any) {
       showToast("error", err.message || "Lỗi kết nối kiểm tra tài khoản.");
@@ -384,58 +396,18 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
             </form>
 
             {checkData && (
-              <div
-                className="mt-3 p-3.5 rounded-xl border border-[var(--line)] space-y-2 text-xs animate-in fade-in zoom-in-95 duration-200"
-                style={{ background: "rgba(0, 0, 0, 0.55)" }}
-              >
-                <div className="flex items-center justify-between border-b border-[var(--line)] pb-2">
-                  <span className="font-bold text-[var(--soft)] uppercase flex items-center gap-1 text-[11px]">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Trạng Thái Tài Khoản
-                  </span>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                      String(checkData.status || "").toUpperCase().includes("HẾT") ||
-                      String(checkData.status || "").toUpperCase().includes("EXPIRED") ||
-                      String(checkData.status || "").toUpperCase().includes("LỖI")
-                        ? "bg-rose-500/10 text-rose-400 border-rose-500/30"
-                        : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                    }`}
-                  >
-                    {checkData.status || "ĐANG HOẠT ĐỘNG"}
-                  </span>
-                </div>
-                <div className="space-y-1.5 text-[11px]">
-                  <div className="flex items-center justify-between p-2 rounded-lg border border-[var(--line)]" style={{ background: "rgba(0, 0, 0, 0.35)" }}>
-                    <span className="font-mono font-bold text-[var(--ink)] truncate max-w-[280px]">
-                      {checkData.account}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => copyToClipboard(checkData.account, "chk_email", "Đã chép Email Adobe!")}
-                      className="p-1 rounded border border-[var(--line)]"
-                      title="Sao chép Email"
-                    >
-                      <Copy className="w-3.5 h-3.5 text-[var(--accent)]" />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between text-[10px] text-[var(--soft)] pt-1">
-                    <span>Gói: <strong>{checkData.plan || "Adobe CC All Apps"}</strong></span>
-                    <span>Hạn: <strong>{checkData.expired_at || "Bản quyền đang hoạt động"}</strong></span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAdobeOtpEmail(checkData.account);
+              <div className="mt-3">
+                <AccountStatusView
+                  data={checkData}
+                  copyToClipboard={copyToClipboard}
+                  showToast={showToast}
+                  onGoOtp={(acc) => {
+                    setAdobeOtpEmail(acc);
                     setAdobeIndex(2);
                   }}
-                  className="w-full mt-2 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md hover:brightness-110"
-                  style={{ background: "var(--btn)", color: "var(--btn-ink)" }}
-                >
-                  <Zap className="w-3.5 h-3.5" /> Chuyển Sang Lấy Mã OTP Cho Email Này
-                </button>
+                  onGoAccountLookup={() => setAdobeIndex(0)}
+                  onStatusUpdated={(updated) => setCheckData(updated)}
+                />
               </div>
             )}
           </div>

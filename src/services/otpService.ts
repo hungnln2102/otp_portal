@@ -1,4 +1,4 @@
-import { AccountResult } from "../types/otp";
+import { AccountResult, OrgSwitchResponse } from "../types/otp";
 
 export interface ApiResponse<T = any> {
   success?: boolean;
@@ -22,6 +22,24 @@ export async function fetchAdobeCheck(email: string): Promise<ApiResponse<Accoun
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: email.trim(), search: email.trim(), input: email.trim() }),
+  });
+  return res.json();
+}
+
+export async function fetchAdobeSwitchTeam(email: string): Promise<ApiResponse<OrgSwitchResponse>> {
+  const res = await fetch("/api/public/otp/adobe/switch-team", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email.trim() }),
+  });
+  return res.json();
+}
+
+export async function fetchAdobeSwitchTeamStatus(email: string): Promise<ApiResponse<OrgSwitchResponse>> {
+  const res = await fetch("/api/public/otp/adobe/switch-team/status", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email.trim() }),
   });
   return res.json();
 }

@@ -2,6 +2,8 @@ export type MainTab = "adobe" | "netflix" | "gpt" | "two_factor";
 export type AdobeSubForm = 0 | 1 | 2; // 0: Lấy tài khoản, 1: Kiểm tra tài khoản, 2: Nhận OTP
 export type NetflixSubForm = 0 | 1 | 2; // 0: Hộ gia đình, 1: Mã 6 số, 2: OTP Đăng Nhập
 
+export type AccountStatusType = "active" | "inactive" | "not_found";
+
 export interface AccountResult {
   account: string;
   password?: string;
@@ -9,6 +11,24 @@ export interface AccountResult {
   expired_at?: string;
   note?: string;
   status?: string;
+  status_type?: AccountStatusType;
+  organization?: string | null;
+  organization_id?: string | number | null;
+  team_change?: {
+    previousName?: string | null;
+    currentName?: string | null;
+    changedAt?: string | null;
+  } | null;
+}
+
+export interface OrgSwitchResponse {
+  success?: boolean;
+  status?: "waiting" | "sending" | "success" | "completed" | "failed" | string;
+  position?: number;
+  etaSeconds?: number;
+  newOrgName?: string;
+  error?: string;
+  message?: string;
 }
 
 export interface OtpResult {
