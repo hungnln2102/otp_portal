@@ -344,8 +344,12 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
 
   // Preload và chuyển cảnh mượt mà giữa các tranh minh họa anime (hỗ trợ tự chuyển ngang/dọc)
   useEffect(() => {
-    setArtOpacity(0.3);
     const targetUrl = resolveArtUrl(currentArt.art, isMobile);
+    if (loadedArt === targetUrl) {
+      setArtOpacity(1);
+      return;
+    }
+    setArtOpacity(0.3);
     const img = new Image();
     img.src = targetUrl;
     img.onload = () => {
@@ -358,7 +362,7 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       setLoadedArt(fallbackUrl);
       setArtOpacity(1);
     };
-  }, [currentArt.art, isMobile]);
+  }, [currentArt.art, isMobile, loadedArt]);
 
   // Canvas Engine: Tích hợp đầy đủ cả Thảm thực vật Anime (Lá phong, Hoa anh đào, Đom đóm, Tuyết tinh)
   // và Hiệu ứng điện ảnh bổ sung (God Rays, Bụi sáng lấp lánh, Bokeh rực rỡ)
@@ -505,7 +509,7 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
           setupEngine();
         }
       }, 50);
-      setTimeout(() => clearInterval(checkInterval), 3000);
+      setTimeout(() => clearInterval(checkInterval), 300);
     }
 
     // VÒNG LẶP RENDER CHÍNH 60FPS

@@ -1,0 +1,14 @@
+services:
+  otp_portal:
+    container_name: otp_portal
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "127.0.0.1:3005:80"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
