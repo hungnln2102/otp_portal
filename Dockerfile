@@ -5,8 +5,7 @@ WORKDIR /app
 
 ENV npm_config_fund=false \
     npm_config_audit=false \
-    npm_config_progress=false \
-    NODE_ENV=production
+    npm_config_progress=false
 
 COPY package*.json ./
 RUN npm ci --prefer-offline --no-audit
