@@ -1,0 +1,57 @@
+name: OTP Portal CI and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          bash -n deploy.sh
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: otp-production
+      cancel-in-progress: false
+    timeout-minutes: 45
+    steps:
+      - name: Deploy validated commit
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          REVISION: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          : "${DEPLOY_HOST:?}" "${DEPLOY_USER:?}" "${DEPLOY_SSH_KEY:?}" "${DEPLOY_KNOWN_HOSTS:?}"
+          umask 077
+          credentials=$(mktemp -d)
+          trap 'rm -rf "$credentials"' EXIT
+          printf '%s\n' "$DEPLOY_SSH_KEY" > "$credentials/key"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$credentials/known_hosts"
+          [[ "$REVISION" =~ ^[0-9a-f]{40}$ ]]
+          ssh -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            -o "UserKnownHostsFile=$credentials/known_hosts" -i "$credentials/key" \
+            -- "$DEPLOY_USER@$DEPLOY_HOST" \
+            "deploy-otp $REVISION"
