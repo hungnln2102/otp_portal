@@ -98,6 +98,8 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
             placeholder="Nhập mã đơn (VD: MAVR-123456) hoặc mã key kích hoạt..."
             onChange={(e) => {
               setCode(e.target.value);
+              setContact("");
+              setContactRequired(false);
               setError("");
               setResult(null);
             }}
@@ -107,7 +109,14 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* 3. Nút Submit Chuẩn CTA Gradient & Glow */}
+      {contactRequired && (
+        <label className="block space-y-1 text-xs text-[var(--soft)]">
+          <span className="flex items-center gap-1.5"><UserCheck className="h-4 w-4" />Thông tin liên hệ khi mua hàng</span>
+          <input required value={contact} disabled={busy}
+            onChange={(event) => setContact(event.target.value)}
+            className="w-full rounded-xl border border-[var(--line)] bg-transparent px-3 py-2.5 text-[var(--ink)]" />
+        </label>
+      )}
       <button
         type="submit"
         disabled={busy || !code.trim() || (contactRequired && !contact.trim())}
