@@ -149,14 +149,14 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
         </div>
       )}
 
-      {result?.outOfStock && !result.replacementRequired && (
+      {result?.outOfStock && (
         <p role="status" className="rounded-xl border border-amber-500/40 p-3 text-xs text-amber-200">
-          {OTP_OPERATION_ERROR}
+          Hiện kho đã hết tài khoản thay thế.
         </p>
       )}
 
       {/* 5. Cảnh Báo & Nút Nhận Tài Khoản Thay Thế */}
-      {result?.replacementRequired && (
+      {result?.replacementRequired && !result.outOfStock && (
         <div
           className="space-y-2.5 rounded-2xl border border-amber-500/40 p-3.5 text-xs text-amber-200 animate-in fade-in duration-200"
           style={{ background: "rgba(30, 15, 0, 0.65)" }}
@@ -164,26 +164,22 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
           <div className="flex items-center gap-2 text-amber-300 font-bold">
             <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
             <span>
-              {result.outOfStock
-                ? OTP_OPERATION_ERROR
-                : "Tài khoản đã cấp cần được thay thế mới."}
+              Tài khoản đã cấp cần được thay thế mới.
             </span>
           </div>
           <p className="text-[11px] text-[var(--soft)] leading-relaxed">
             Hệ thống hỗ trợ cấp tài khoản thay thế tự động từ kho gói tương ứng.
           </p>
-          {!result.outOfStock && (
-            <button
-              type="button"
-              className="btn-cta w-full"
-              disabled={busy}
-              onClick={() => void request("claim")}
-              style={{ padding: "9px 14px", fontSize: "12px" }}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Nhận Tài Khoản Mới Ngay</span>
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn-cta w-full"
+            disabled={busy}
+            onClick={() => void request("claim")}
+            style={{ padding: "9px 14px", fontSize: "12px" }}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Nhận Tài Khoản Mới Ngay</span>
+          </button>
         </div>
       )}
 
@@ -270,7 +266,9 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
             style={{ background: "rgba(0, 0, 0, 0.45)" }}
           >
             <div className="font-mono font-bold text-slate-200">{result.data.account}</div>
-            <p className="text-[var(--soft)] text-[11px]">{OTP_OPERATION_ERROR}</p>
+            <p role="status" className="text-[var(--soft)] text-[11px]">
+              Chưa xác minh được tình trạng tài khoản.
+            </p>
             <button
               type="button"
               className="btn-cta w-full"
