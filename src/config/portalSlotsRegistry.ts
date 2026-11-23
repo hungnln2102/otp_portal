@@ -1,11 +1,6 @@
 /**
  * portalSlotsRegistry.ts
- * NGUỒN SỰ THẬT DUY NHẤT (SSOT) CỦA CÁC Ô INPUT / FORM TRÊN WEB OTP_PORTAL
- * 
- * Khi thêm một form mới hoặc ô input mới vào web otp_portal:
- * - Chỉ cần khai báo thêm 1 slot vào danh sách PORTAL_SLOTS_REGISTRY bên dưới.
- * - Hệ thống sẽ tự động đồng bộ (Auto-Register) sang Backend & Trang Quản Trị Admin (admin_orderlist)
- *   để Master có thể thấy ngay trên bảng và gán các cổng API tùy ý!
+ * Danh sách ô nhập dự phòng khi portal chưa đọc được cấu hình từ backend.
  */
 
 export interface PortalSlotDefinition {
@@ -25,36 +20,23 @@ export interface PortalSlotDefinition {
 export const PORTAL_SLOTS_REGISTRY: PortalSlotDefinition[] = [
   // ── 1. NHÓM ADOBE CREATIVE CLOUD ──────────────────────────────
   {
-    slot_key: "adobe_account",
-    name: "Adobe: Tra Cứu Tài Khoản",
+    slot_key: "adobe_check",
+    name: "Adobe — Lấy và kiểm tra tài khoản",
     category: "adobe",
     sub_tab_index: 0,
-    sub_tab_title: "Lấy Tài Khoản",
-    btn_text: "Tra Cứu Thông Tin",
-    input_placeholder: "Nhập Email mua hàng hoặc Mã đơn hàng...",
-    cooldown_seconds: 15,
-    assigned_services: ["yuna_2fa"],
-    enabled: true,
-    description: "Tra cứu email, mật khẩu và gói cước tài khoản Adobe được cấp từ đơn hàng.",
-  },
-  {
-    slot_key: "adobe_check",
-    name: "Adobe: Kiểm Tra Tài Khoản",
-    category: "adobe",
-    sub_tab_index: 1,
-    sub_tab_title: "Kiểm Tra Tài Khoản",
-    btn_text: "Kiểm Tra Bản Quyền",
-    input_placeholder: "Nhập Email tài khoản Adobe cần kiểm tra...",
+    sub_tab_title: "Lấy và kiểm tra tài khoản",
+    btn_text: "Lấy và kiểm tra tài khoản",
+    input_placeholder: "Nhập mã đơn hoặc mã kích hoạt...",
     cooldown_seconds: 15,
     assigned_services: ["fix_ades_status", "fix_ades", "tinyhost"],
     enabled: true,
-    description: "Kiểm tra trạng thái bản quyền, gói cước và ngày hết hạn tài khoản Adobe của khách hàng.",
+    description: "Lấy tài khoản Adobe theo đơn hàng và kiểm tra trạng thái tài khoản.",
   },
   {
     slot_key: "adobe_otp",
     name: "Adobe: Lấy Mã OTP 6 Số",
     category: "adobe",
-    sub_tab_index: 2,
+    sub_tab_index: 1,
     sub_tab_title: "Nhận OTP",
     btn_text: "Lấy Mã OTP Adobe",
     input_placeholder: "Nhập địa chỉ Email Adobe (VD: user@domain.com)...",

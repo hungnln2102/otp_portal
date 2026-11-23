@@ -1,3 +1,4 @@
+import { OTP_OPERATION_ERROR } from "../../../services/otpService";
 import React, { useState, useEffect, useRef } from "react";
 import {
   ShieldCheck,
@@ -11,15 +12,18 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { OtpPinDisplay } from "../../../components/OtpPinDisplay";
+import { OtpEntryWaitBanner } from "../../../components/OtpEntryWaitBanner";
 import { generateTotp, isValidBase32Secret, TotpResult } from "../../../utils/totpGenerator";
 
 interface TwoFactorSectionProps {
+  entryWaitSeconds: number;
   showToast: (type: "success" | "error" | "info", text: string) => void;
   copiedKey: string | null;
   copyToClipboard: (text: string, key: string, label?: string) => void;
 }
 
 export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
+  entryWaitSeconds,
   showToast,
   copiedKey,
   copyToClipboard,
@@ -29,11 +33,13 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
+  const isEntryLocked = entryWaitSeconds > 0;
 
   const activeSecretRef = useRef<string>("");
 
   // Hàm sinh mã OTP 6 số
   const handleGenerate = async (customKey?: string) => {
+    if (isEntryLocked) return;
     const keyToUse = (customKey !== undefined ? customKey : secretKey).trim();
     if (!keyToUse) {
       setErrorMsg("Vui lòng nhập hoặc dán khóa bí mật 2FA (Secret Key).");
@@ -53,8 +59,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
       setTotpData(result);
       activeSecretRef.current = keyToUse;
       showToast("success", `Đã tạo mã OTP 6 số [${result.code}] thành công!`);
-    } catch (err: any) {
-      setErrorMsg(err.message || "Không thể tạo mã OTP từ khóa này.");
+    } catch {
+      setTotpData(null);
+      setErrorMsg(OTP_OPERATION_ERROR);
     } finally {
       setLoading(false);
     }
@@ -75,7 +82,8 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
           const fresh = await generateTotp(activeSecretRef.current);
           setTotpData(fresh);
         } catch {
-          // Bỏ qua lỗi ngầm khi refresh
+          setTotpData(null);
+          setErrorMsg(OTP_OPERATION_ERROR);
         }
       } else {
         setTotpData((prev) => (prev ? { ...prev, remainingSeconds: remaining, progress } : null));
@@ -87,6 +95,7 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 
   // Dán từ clipboard
   const handlePaste = async () => {
+    if (isEntryLocked) return;
     try {
       const text = await navigator.clipboard.readText();
       if (text) {
@@ -100,7 +109,7 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
         }
       }
     } catch {
-      showToast("error", "Không thể đọc clipboard. Hãy nhấn Ctrl+V để dán trực tiếp.");
+      showToast("error", OTP_OPERATION_ERROR);
     }
   };
 
@@ -132,6 +141,8 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
         </span>
       </div>
 
+      <OtpEntryWaitBanner remainingSeconds={entryWaitSeconds} />
+
       {/* 2. Input Box: Khóa Bí Mật 2FA */}
       <div className="space-y-1.5">
         <div className="relative flex items-center">
@@ -141,16 +152,21 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 
           <input
             type="text"
+            disabled={isEntryLocked || loading}
             value={secretKey}
             onChange={(e) => {
               setSecretKey(e.target.value);
               if (errorMsg) setErrorMsg(null);
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter") handleGenerate();
+              if (e.key === "Enter" && !isEntryLocked) handleGenerate();
             }}
-            placeholder="Nhập hoặc dán Khóa Bí Mật 2FA (Secret Key: vd JBSWY3DPEHPK3PXP...)"
-            className="w-full pl-10 pr-20 py-2.5 rounded-xl border border-[var(--line)] text-xs text-[var(--ink)] placeholder:text-[var(--soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all uppercase font-mono"
+            placeholder={
+              isEntryLocked
+                ? `Vui lòng chờ ${entryWaitSeconds}s để nhập khóa bí mật 2FA...`
+                : "Nhập hoặc dán Khóa Bí Mật 2FA (Secret Key: vd JBSWY3DPEHPK3PXP...)"
+            }
+            className="w-full pl-10 pr-20 py-2.5 rounded-xl border border-[var(--line)] text-xs text-[var(--ink)] placeholder:text-[var(--soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all uppercase font-mono disabled:opacity-55 disabled:cursor-not-allowed"
             style={{ background: "rgba(0, 0, 0, 0.4)" }}
           />
 
@@ -158,8 +174,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
             {secretKey && (
               <button
                 type="button"
+                disabled={isEntryLocked || loading}
                 onClick={handleClear}
-                className="p-1 rounded-md text-[var(--soft)] hover:text-[var(--ink)] hover:bg-white/10 transition-all"
+                className="p-1 rounded-md text-[var(--soft)] hover:text-[var(--ink)] hover:bg-white/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                 title="Xóa nội dung"
               >
                 <X className="w-3.5 h-3.5" />
@@ -168,8 +185,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 
             <button
               type="button"
+              disabled={isEntryLocked || loading}
               onClick={handlePaste}
-              className="p-1.5 rounded-md text-[var(--accent)] hover:bg-white/10 transition-all flex items-center gap-1 text-[10px] font-semibold"
+              className="p-1.5 rounded-md text-[var(--accent)] hover:bg-white/10 transition-all flex items-center gap-1 text-[10px] font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
               title="Dán từ bộ nhớ tạm"
             >
               <Clipboard className="w-3.5 h-3.5" />
@@ -191,15 +209,25 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
         <button
           type="button"
           onClick={() => handleGenerate()}
-          disabled={loading || !secretKey.trim()}
+          disabled={isEntryLocked || loading || !secretKey.trim()}
           className="btn-cta flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          {loading ? (
-            <RefreshCw className="w-4 h-4 animate-spin" />
+          {isEntryLocked ? (
+            <>
+              <Clock className="w-4 h-4 shrink-0" />
+              <span>Vui lòng chờ {entryWaitSeconds}s</span>
+            </>
+          ) : loading ? (
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Đang tính toán...</span>
+            </>
           ) : (
-            <Sparkles className="w-4 h-4 shrink-0" />
+            <>
+              <Sparkles className="w-4 h-4 shrink-0" />
+              <span>Lấy Mã 2FA (6 Số)</span>
+            </>
           )}
-          <span>{loading ? "Đang tính toán..." : "Lấy Mã 2FA (6 Số)"}</span>
         </button>
       </div>
 

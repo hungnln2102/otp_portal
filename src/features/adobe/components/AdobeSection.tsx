@@ -9,13 +9,15 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { OtpResult } from "../../../types/otp";
-import { fetchAdobeOtp } from "../../../services/otpService";
+import { OTP_OPERATION_ERROR, fetchAdobeOtp } from "../../../services/otpService";
 import { OtpPinDisplay } from "../../../components/OtpPinDisplay";
+import { OtpEntryWaitBanner } from "../../../components/OtpEntryWaitBanner";
 import { AdobeAccountRecovery } from "./AdobeAccountRecovery";
 
 interface AdobeSectionProps {
   cooldown: number;
   setCooldown: (seconds: number) => void;
+  entryWaitSeconds: number;
   showToast: (type: "success" | "error" | "info", text: string) => void;
   copiedKey: string | null;
   copyToClipboard: (text: string, key: string, label?: string) => void;
@@ -24,6 +26,7 @@ interface AdobeSectionProps {
 export const AdobeSection: React.FC<AdobeSectionProps> = ({
   cooldown,
   setCooldown,
+  entryWaitSeconds,
   showToast,
   copiedKey,
   copyToClipboard,
@@ -32,9 +35,11 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
   const [adobeOtpEmail, setAdobeOtpEmail] = useState("");
   const [loadingOtp, setLoadingOtp] = useState(false);
   const [otpData, setOtpData] = useState<OtpResult | null>(null);
+  const isEntryLocked = entryWaitSeconds > 0;
 
   const handleFetchOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isEntryLocked) return;
     const email = adobeOtpEmail.trim();
     if (!email || !email.includes("@")) {
       showToast("error", "Vui lòng nhập đúng định dạng Email Adobe!");
@@ -57,10 +62,10 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
         showToast("success", `Đã nhận mã OTP Adobe: ${res.otp}`);
       } else {
         setCooldown(15);
-        showToast("error", res.error || res.message || "Chưa tìm thấy mã OTP mới. Vui lòng thử lại sau 15s.");
+        showToast("error", OTP_OPERATION_ERROR);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Lỗi kết nối khi lấy mã OTP.");
+    } catch {
+      showToast("error", OTP_OPERATION_ERROR);
     } finally {
       setLoadingOtp(false);
     }
@@ -89,7 +94,7 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
             }}
           >
             <ShieldCheck className="w-3 h-3" />
-            Kiểm Tra Tài Khoản
+            Lấy và kiểm tra tài khoản
           </button>
 
           <button
@@ -112,7 +117,8 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
         <AdobeAccountRecovery copyToClipboard={copyToClipboard} showToast={showToast}
           onGoOtp={(email) => { setAdobeOtpEmail(email); setAdobeIndex(2); }} />
       ) : (
-        <div>
+        <div className="space-y-3">
+            <OtpEntryWaitBanner remainingSeconds={entryWaitSeconds} />
             <form onSubmit={handleFetchOtp} className="space-y-3">
               <div>
                 <div className="relative">
@@ -120,10 +126,15 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
                   <input
                     type="email"
                     required
+                    disabled={isEntryLocked || loadingOtp}
                     value={adobeOtpEmail}
                     onChange={(e) => setAdobeOtpEmail(e.target.value)}
-                    placeholder="Nhập Email tài khoản Adobe cần lấy mã..."
-                    className="w-full rounded-xl pl-9 pr-3 py-2.5 text-xs text-[var(--ink)] placeholder-[var(--soft)]/50 focus:outline-none transition-all border border-[var(--line)]"
+                    placeholder={
+                      isEntryLocked
+                        ? `Vui lòng chờ ${entryWaitSeconds}s để nhập Email Adobe...`
+                        : "Nhập Email tài khoản Adobe cần lấy mã..."
+                    }
+                    className="w-full rounded-xl pl-9 pr-3 py-2.5 text-xs text-[var(--ink)] placeholder-[var(--soft)]/50 focus:outline-none transition-all border border-[var(--line)] disabled:opacity-55 disabled:cursor-not-allowed"
                     style={{ background: "rgba(0, 0, 0, 0.45)" }}
                   />
                 </div>
@@ -141,11 +152,16 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
 
                 <button
                   type="submit"
-                  disabled={loadingOtp || cooldown > 0 || !adobeOtpEmail.trim()}
+                  disabled={isEntryLocked || loadingOtp || cooldown > 0 || !adobeOtpEmail.trim()}
                   className="btn-cta flex-1"
                   style={{ padding: "10px 16px" }}
                 >
-                  {loadingOtp ? (
+                  {isEntryLocked ? (
+                    <>
+                      <Clock className="w-3.5 h-3.5 shrink-0" />
+                      <span>Vui lòng chờ {entryWaitSeconds}s</span>
+                    </>
+                  ) : loadingOtp ? (
                     <>
                       <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
                       <span>Đang kiểm tra hòm thư...</span>

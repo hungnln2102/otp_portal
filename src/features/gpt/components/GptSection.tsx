@@ -15,12 +15,14 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { AccountResult, GptOtpResult } from "../../../types/otp";
-import { fetchGptAccount, fetchGptOtp } from "../../../services/otpService";
+import { OTP_OPERATION_ERROR, fetchGptAccount, fetchGptOtp } from "../../../services/otpService";
 import { OtpPinDisplay } from "../../../components/OtpPinDisplay";
+import { OtpEntryWaitBanner } from "../../../components/OtpEntryWaitBanner";
 
 interface GptSectionProps {
   cooldown: number;
   setCooldown: (seconds: number) => void;
+  entryWaitSeconds: number;
   showToast: (type: "success" | "error" | "info", text: string) => void;
   copiedKey: string | null;
   copyToClipboard: (text: string, key: string, label?: string) => void;
@@ -29,6 +31,7 @@ interface GptSectionProps {
 export const GptSection: React.FC<GptSectionProps> = ({
   cooldown,
   setCooldown,
+  entryWaitSeconds,
   showToast,
   copiedKey,
   copyToClipboard,
@@ -42,6 +45,7 @@ export const GptSection: React.FC<GptSectionProps> = ({
 
   const [accountData, setAccountData] = useState<AccountResult | null>(null);
   const [otpData, setOtpData] = useState<GptOtpResult | null>(null);
+  const isEntryLocked = entryWaitSeconds > 0;
 
   const handleFetchAccount = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,13 +64,10 @@ export const GptSection: React.FC<GptSectionProps> = ({
         setAccountData(res.data);
         showToast("success", "Đã tìm thấy thông tin tài khoản ChatGPT!");
       } else {
-        showToast(
-          "error",
-          res.error || res.message || "Không tìm thấy tài khoản với thông tin đã nhập."
-        );
+        showToast("error", OTP_OPERATION_ERROR);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Lỗi kết nối tra cứu tài khoản GPT.");
+    } catch {
+      showToast("error", OTP_OPERATION_ERROR);
     } finally {
       setLoadingAccount(false);
     }
@@ -74,6 +75,7 @@ export const GptSection: React.FC<GptSectionProps> = ({
 
   const handleFetchOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isEntryLocked) return;
     const email = gptOtpEmail.trim();
     if (!email || !email.includes("@")) {
       showToast("error", "Vui lòng nhập đúng định dạng Email OpenAI / ChatGPT!");
@@ -86,8 +88,8 @@ export const GptSection: React.FC<GptSectionProps> = ({
       setOtpData(null);
 
       const res = await fetchGptOtp(email);
-      if (res.success || res.ok) {
-        const code = res.code || (res as any).otp || "";
+      const code = res.code || res.otp;
+      if ((res.success || res.ok) && code) {
         setOtpData({
           code,
           email,
@@ -98,13 +100,10 @@ export const GptSection: React.FC<GptSectionProps> = ({
         showToast("success", `Đã nhận mã xác minh GPT: ${code}`);
       } else {
         setCooldown(15);
-        showToast(
-          "error",
-          res.error || res.message || "Chưa có mã xác nhận mới. Vui lòng thử lại sau 15s."
-        );
+        showToast("error", OTP_OPERATION_ERROR);
       }
-    } catch (err: any) {
-      showToast("error", err.message || "Lỗi kết nối khi lấy mã xác minh GPT.");
+    } catch {
+      showToast("error", OTP_OPERATION_ERROR);
     } finally {
       setLoadingOtp(false);
     }
@@ -299,7 +298,8 @@ export const GptSection: React.FC<GptSectionProps> = ({
           </div>
 
           {/* GPT FORM 1: NHẬN MÃ OTP */}
-          <div className="w-1/2 pl-2">
+          <div className="w-1/2 pl-2 space-y-3">
+            <OtpEntryWaitBanner remainingSeconds={entryWaitSeconds} />
             <form onSubmit={handleFetchOtp} className="space-y-3">
               <div>
                 <div className="relative">
@@ -307,10 +307,15 @@ export const GptSection: React.FC<GptSectionProps> = ({
                   <input
                     type="email"
                     required
+                    disabled={isEntryLocked || loadingOtp}
                     value={gptOtpEmail}
                     onChange={(e) => setGptOtpEmail(e.target.value)}
-                    placeholder="Nhập Email tài khoản OpenAI / ChatGPT cần lấy mã..."
-                    className="w-full rounded-xl pl-9 pr-3 py-2.5 text-xs text-[var(--ink)] placeholder-[var(--soft)]/50 focus:outline-none transition-all border border-[var(--line)]"
+                    placeholder={
+                      isEntryLocked
+                        ? `Vui lòng chờ ${entryWaitSeconds}s để nhập Email OpenAI / ChatGPT...`
+                        : "Nhập Email tài khoản OpenAI / ChatGPT cần lấy mã..."
+                    }
+                    className="w-full rounded-xl pl-9 pr-3 py-2.5 text-xs text-[var(--ink)] placeholder-[var(--soft)]/50 focus:outline-none transition-all border border-[var(--line)] disabled:opacity-55 disabled:cursor-not-allowed"
                     style={{ background: "rgba(0, 0, 0, 0.45)" }}
                   />
                 </div>
@@ -328,11 +333,16 @@ export const GptSection: React.FC<GptSectionProps> = ({
 
                 <button
                   type="submit"
-                  disabled={loadingOtp || cooldown > 0 || !gptOtpEmail.trim()}
+                  disabled={isEntryLocked || loadingOtp || cooldown > 0 || !gptOtpEmail.trim()}
                   className="btn-cta flex-1"
                   style={{ padding: "10px 16px" }}
                 >
-                  {loadingOtp ? (
+                  {isEntryLocked ? (
+                    <>
+                      <Clock className="w-3.5 h-3.5 shrink-0" />
+                      <span>Vui lòng chờ {entryWaitSeconds}s</span>
+                    </>
+                  ) : loadingOtp ? (
                     <>
                       <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
                       <span>Đang kiểm tra hòm thư OpenAI...</span>

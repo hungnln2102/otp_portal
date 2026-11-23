@@ -4,13 +4,16 @@ import { AccountStatusActiveCard } from "./AccountStatusActiveCard";
 import { AccountStatusSwitchTeamCard } from "./AccountStatusSwitchTeamCard";
 import { AccountStatusNotFoundCard } from "./AccountStatusNotFoundCard";
 import {
+  OTP_OPERATION_ERROR,
   fetchAdobeSwitchTeam,
   fetchAdobeSwitchTeamStatus,
   fetchAdobeCheck,
+  type AdobeOrderProof,
 } from "../../services/otpService";
 
 interface AccountStatusViewProps {
   data: AccountResult;
+  orderProof: AdobeOrderProof;
   copyToClipboard: (text: string, key: string, label?: string) => void;
   showToast: (type: "success" | "error" | "info", text: string) => void;
   onGoOtp?: (account: string) => void;
@@ -20,6 +23,7 @@ interface AccountStatusViewProps {
 
 export const AccountStatusView: React.FC<AccountStatusViewProps> = ({
   data,
+  orderProof,
   copyToClipboard,
   showToast,
   onGoOtp,
@@ -55,7 +59,7 @@ export const AccountStatusView: React.FC<AccountStatusViewProps> = ({
     setSwitchProgress(null);
     setSwitchError(null);
     pollCountRef.current = 0;
-  }, [data.account]);
+  }, [data.account, orderProof]);
 
   const handleStartSwitchTeam = async () => {
     if (isSwitching) return;
@@ -66,7 +70,7 @@ export const AccountStatusView: React.FC<AccountStatusViewProps> = ({
       setSwitchProgress({ status: "waiting" });
       pollCountRef.current = 0;
 
-      const res = await fetchAdobeSwitchTeam(data.account);
+      const res = await fetchAdobeSwitchTeam(orderProof, data.account);
       if (!res.success) {
         throw new Error(res.error || res.message || "Không thể kích hoạt yêu cầu đổi team.");
       }
@@ -86,15 +90,15 @@ export const AccountStatusView: React.FC<AccountStatusViewProps> = ({
           if (pollTimerRef.current) clearInterval(pollTimerRef.current);
           if (isMountedRef.current) {
             setIsSwitching(false);
-            setSwitchError("Quá thời gian chờ phản hồi từ hệ thống đổi team. Vui lòng bấm thử lại.");
-            showToast("error", "Hết thời gian chờ đổi team. Vui lòng thử lại sau.");
+            setSwitchError(OTP_OPERATION_ERROR);
+            showToast("error", OTP_OPERATION_ERROR);
           }
           return;
         }
 
         try {
           // 1. Kiểm tra trạng thái org-switch
-          const statusRes = await fetchAdobeSwitchTeamStatus(data.account);
+          const statusRes = await fetchAdobeSwitchTeamStatus(orderProof, data.account);
           if (isMountedRef.current && statusRes) {
             setSwitchProgress(statusRes.data || statusRes);
           }
@@ -119,11 +123,11 @@ export const AccountStatusView: React.FC<AccountStatusViewProps> = ({
           console.warn("[Ades Switch Team Poll] Lỗi chu kỳ polling:", pollErr.message);
         }
       }, 3500);
-    } catch (err: any) {
+    } catch {
       if (isMountedRef.current) {
         setIsSwitching(false);
-        setSwitchError(err.message || "Lỗi khi yêu cầu chuyển team.");
-        showToast("error", err.message || "Lỗi khi yêu cầu chuyển team.");
+        setSwitchError(OTP_OPERATION_ERROR);
+        showToast("error", OTP_OPERATION_ERROR);
       }
     }
   };

@@ -16,12 +16,12 @@ import { NetflixSection } from "./features/netflix/components/NetflixSection";
 import { GptSection } from "./features/gpt/components/GptSection";
 import { TwoFactorSection } from "./features/twoFactor/components/TwoFactorSection";
 import { FaqModal } from "./components/FaqModal";
+import { ENTRY_WAIT_SECONDS, useEntryWaitTimer } from "./hooks/useEntryWaitTimer";
 import {
   getAutoThemeByDate,
   resolvePortalTheme,
   getThemeMeta,
 } from "./services/themeService";
-import { syncPortalSlotsWithBackend } from "./services/otpService";
 import "./styles/festival-themes.css";
 
 export const App: React.FC = () => {
@@ -37,7 +37,6 @@ export const App: React.FC = () => {
     return getAutoThemeByDate(new Date());
   });
 
-  // Gọi ngầm cấu hình theme và đồng bộ danh mục ô input sang Backend
   useEffect(() => {
     let isMounted = true;
     resolvePortalTheme().then((resolvedTheme) => {
@@ -45,8 +44,6 @@ export const App: React.FC = () => {
         setTheme(resolvedTheme);
       }
     });
-    // Tự động thông báo cấu hình các ô input hiện có lên Backend & Admin
-    void syncPortalSlotsWithBackend();
     return () => {
       isMounted = false;
     };
@@ -61,6 +58,9 @@ export const App: React.FC = () => {
   const [adobeOtpCooldown, setAdobeOtpCooldown] = useState(0);
   const [netflixCooldown, setNetflixCooldown] = useState(0);
   const [gptCooldown, setGptCooldown] = useState(0);
+
+  // Bộ đếm chờ bắt buộc 30s ngay khi vừa vào trang trước khi cho điền đơn lấy OTP
+  const entryWaitSeconds = useEntryWaitTimer(ENTRY_WAIT_SECONDS);
 
   // UI Helpers
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -255,6 +255,7 @@ export const App: React.FC = () => {
             <AdobeSection
               cooldown={adobeOtpCooldown}
               setCooldown={setAdobeOtpCooldown}
+              entryWaitSeconds={entryWaitSeconds}
               showToast={showToast}
               copiedKey={copiedKey}
               copyToClipboard={copyToClipboard}
@@ -265,6 +266,7 @@ export const App: React.FC = () => {
             <NetflixSection
               cooldown={netflixCooldown}
               setCooldown={setNetflixCooldown}
+              entryWaitSeconds={entryWaitSeconds}
               showToast={showToast}
               copiedKey={copiedKey}
               copyToClipboard={copyToClipboard}
@@ -275,6 +277,7 @@ export const App: React.FC = () => {
             <GptSection
               cooldown={gptCooldown}
               setCooldown={setGptCooldown}
+              entryWaitSeconds={entryWaitSeconds}
               showToast={showToast}
               copiedKey={copiedKey}
               copyToClipboard={copyToClipboard}
@@ -283,6 +286,7 @@ export const App: React.FC = () => {
 
           {activeTab === "two_factor" && (
             <TwoFactorSection
+              entryWaitSeconds={entryWaitSeconds}
               showToast={showToast}
               copiedKey={copiedKey}
               copyToClipboard={copyToClipboard}

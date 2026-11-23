@@ -1,3 +1,4 @@
+import { OTP_OPERATION_ERROR, type AdobeOrderProof } from "../../../services/otpService";
 import React, { useState } from "react";
 import {
   KeyRound,
@@ -21,7 +22,7 @@ interface Props {
 
 interface RecoveryResult {
   success: boolean;
-  error?: string;
+  source?: "ades" | "yuna";
   contactRequired?: boolean;
   replacementRequired?: boolean;
   outOfStock?: boolean;
@@ -38,35 +39,35 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
   const [contact, setContact] = useState("");
   const [contactRequired, setContactRequired] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<RecoveryResult | null>(null);
+  const [result, setResult] = useState<(RecoveryResult & { orderProof: AdobeOrderProof }) | null>(null);
   const [error, setError] = useState("");
 
   async function request(action: "check" | "claim") {
     if (busy || !code.trim()) return;
+    const orderProof = { code: code.trim(), contact: contact.trim() };
     setBusy(true);
     setError("");
     try {
       const response = await fetch(`/api/public/otp/adobe/recovery/${action}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: code.trim(), contact: contact.trim() }),
+        body: JSON.stringify(orderProof),
       });
       const next: RecoveryResult = await response.json();
       if (!response.ok || !next.success) {
-        throw new Error(next.error || "Không thể kiểm tra tài khoản.");
+        throw new Error(OTP_OPERATION_ERROR);
       }
       if (next.contactRequired) {
         setContactRequired(true);
         showToast("info", "Vui lòng nhập thêm thông tin liên hệ khi mua đơn!");
       }
-      setResult(next);
+      setResult({ ...next, orderProof });
       if (next.replaced) {
         showToast("success", "Đã cấp tài khoản thay thế thành công!");
       }
-    } catch (failure) {
-      const msg = failure instanceof Error ? failure.message : "Không thể kết nối.";
-      setError(msg);
-      showToast("error", msg);
+    } catch {
+      setError(OTP_OPERATION_ERROR);
+      showToast("error", OTP_OPERATION_ERROR);
     } finally {
       setBusy(false);
     }
@@ -130,12 +131,12 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
         {busy ? (
           <>
             <RefreshCw className="w-4 h-4 animate-spin shrink-0" />
-            <span>Đang kiểm tra tài khoản...</span>
+            <span>Đang lấy và kiểm tra tài khoản...</span>
           </>
         ) : (
           <>
             <Search className="w-4 h-4 shrink-0" />
-            <span>Kiểm Tra Tài Khoản</span>
+            <span>Lấy và kiểm tra tài khoản</span>
           </>
         )}
       </button>
@@ -148,6 +149,12 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
         </div>
       )}
 
+      {result?.outOfStock && !result.replacementRequired && (
+        <p role="status" className="rounded-xl border border-amber-500/40 p-3 text-xs text-amber-200">
+          {OTP_OPERATION_ERROR}
+        </p>
+      )}
+
       {/* 5. Cảnh Báo & Nút Nhận Tài Khoản Thay Thế */}
       {result?.replacementRequired && (
         <div
@@ -158,7 +165,7 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
             <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
             <span>
               {result.outOfStock
-                ? "Chưa có tài khoản thay thế. Vui lòng liên hệ bộ phận hỗ trợ."
+                ? OTP_OPERATION_ERROR
                 : "Tài khoản đã cấp cần được thay thế mới."}
             </span>
           </div>
@@ -221,9 +228,34 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
 
       {/* 8. Render Thẻ Trạng Thái Tài Khoản */}
       {result?.data &&
-        (result.data.status_type === "active" || result.data.status_type === "inactive" ? (
+        (result.source === "yuna" ? (
+          <div className="space-y-2.5 rounded-2xl border border-[var(--line)] p-3.5 text-xs">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[var(--soft)]">Tài khoản Adobe</div>
+                <div className="break-all font-mono font-bold text-[var(--ink)]">{result.data.account}</div>
+              </div>
+              <button
+                type="button"
+                className="flex shrink-0 items-center gap-1 text-[var(--accent)] hover:underline"
+                onClick={() => copyToClipboard(result.data!.account, "adobe_recovery_account")}
+              >
+                <Copy className="w-3.5 h-3.5" />
+                Sao chép
+              </button>
+            </div>
+            <button
+              type="button"
+              className="btn-cta w-full cursor-not-allowed opacity-60"
+              disabled
+            >
+              Báo lỗi · Sắp hỗ trợ
+            </button>
+          </div>
+        ) : result.data.status_type === "active" || result.data.status_type === "inactive" ? (
           <AccountStatusView
             data={{ ...result.data, status_type: result.data.status_type }}
+            orderProof={result.orderProof}
             copyToClipboard={copyToClipboard}
             showToast={showToast}
             onGoOtp={onGoOtp}
@@ -238,7 +270,7 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
             style={{ background: "rgba(0, 0, 0, 0.45)" }}
           >
             <div className="font-mono font-bold text-slate-200">{result.data.account}</div>
-            <p className="text-[var(--soft)] text-[11px]">Chưa xác minh được trạng thái tài khoản từ máy chủ.</p>
+            <p className="text-[var(--soft)] text-[11px]">{OTP_OPERATION_ERROR}</p>
             <button
               type="button"
               className="btn-cta w-full"
