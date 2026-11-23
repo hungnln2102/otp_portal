@@ -41,6 +41,9 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<(RecoveryResult & { orderProof: AdobeOrderProof }) | null>(null);
   const [error, setError] = useState("");
+  const account = result?.data?.account;
+  const password = result?.data?.password;
+  const showAdesCredentials = result?.source === "ades" && Boolean(result.data);
 
   async function request(action: "check" | "claim") {
     if (busy || !code.trim()) return;
@@ -191,8 +194,26 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
         </div>
       )}
 
-      {/* 7. Hiển Thị Mật Khẩu (Nếu Có) */}
-      {result?.data?.password && (
+      {showAdesCredentials && (
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-black/45 p-2.5 text-xs">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="shrink-0 text-[10px] font-semibold uppercase text-[var(--soft)]">Tài khoản:</span>
+            <span className="break-all font-mono font-bold text-[var(--ink)]">{account}</span>
+          </div>
+          {account && (
+            <button
+              type="button"
+              className="flex shrink-0 items-center gap-1 text-[11px] font-semibold text-[var(--accent)] hover:underline"
+              onClick={() => copyToClipboard(account, "adobe_recovery_account")}
+            >
+              <Copy className="w-3.5 h-3.5" />
+              <span>Sao chép</span>
+            </button>
+          )}
+        </div>
+      )}
+
+      {(showAdesCredentials || password) && (
         <div
           className="flex items-center justify-between p-2.5 rounded-xl border border-[var(--line)] text-xs animate-in fade-in"
           style={{ background: "rgba(0, 0, 0, 0.45)" }}
@@ -202,23 +223,25 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
               Mật khẩu:
             </span>
             <span className="font-mono font-bold text-amber-300">
-              {result.data.password}
+              {password}
             </span>
           </div>
-          <button
-            type="button"
-            className="flex items-center gap-1 text-[11px] font-semibold text-[var(--accent)] hover:underline cursor-pointer"
-            onClick={() =>
-              copyToClipboard(
-                result.data!.password!,
-                "adobe_recovery_password",
-                "Đã sao chép mật khẩu Adobe!"
-              )
-            }
-          >
-            <Copy className="w-3.5 h-3.5" />
-            <span>Sao chép</span>
-          </button>
+          {password && (
+            <button
+              type="button"
+              className="flex items-center gap-1 text-[11px] font-semibold text-[var(--accent)] hover:underline cursor-pointer"
+              onClick={() =>
+                copyToClipboard(
+                  password,
+                  "adobe_recovery_password",
+                  "Đã sao chép mật khẩu Adobe!"
+                )
+              }
+            >
+              <Copy className="w-3.5 h-3.5" />
+              <span>Sao chép</span>
+            </button>
+          )}
         </div>
       )}
 
@@ -265,7 +288,9 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
             className="space-y-2 rounded-2xl border border-[var(--line)] p-3.5 text-xs text-[var(--ink)] animate-in fade-in"
             style={{ background: "rgba(0, 0, 0, 0.45)" }}
           >
-            <div className="font-mono font-bold text-slate-200">{result.data.account}</div>
+            {!showAdesCredentials && (
+              <div className="font-mono font-bold text-slate-200">{result.data.account}</div>
+            )}
             <p role="status" className="text-[var(--soft)] text-[11px]">
               Chưa xác minh được tình trạng tài khoản.
             </p>
