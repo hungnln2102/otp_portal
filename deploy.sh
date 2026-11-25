@@ -83,6 +83,9 @@ check_redirect() {
   fi
 }
 
+# Compose can report the container started before Nginx accepts connections.
+curl -fsS --retry 5 --retry-all-errors --max-time 10 \
+  -o /dev/null "$origin/system/"
 check_response "$origin/system/" "$smoke_dir/origin.html" 200 '^text/html$'
 entry=$(grep -oE '/system/assets/[^" ]+\.js' "$smoke_dir/origin.html" | sed -n '1p')
 stylesheet=$(grep -oE '/system/assets/[^" ]+\.css' "$smoke_dir/origin.html" | sed -n '1p')
