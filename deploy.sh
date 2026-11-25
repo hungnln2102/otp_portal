@@ -54,8 +54,8 @@ echo "[3/4] Starting updated container..."
 "${DC[@]}" -f docker-compose.yml up -d --remove-orphans
 
 echo "[4/4] Checking deployed portal..."
-origin=http://127.0.0.1:3005/otp/
-public=https://www.mavrykpremium.com/otp/
+origin=http://127.0.0.1:3005/system/
+public=https://www.mavrykpremium.com/system/
 entry_pattern='assets/[^" ]+\.js'
 entry=$(curl -fsS --retry 5 --retry-all-errors --max-time 10 "$origin" | grep -oE "$entry_pattern" | sed -n '1p')
 test -n "$entry"
@@ -65,5 +65,5 @@ curl -fsS --max-time 10 "$public$entry" -o /dev/null
 
 echo "======================================"
 echo "  Deployment completed!"
-echo "  URL: https://www.mavrykpremium.com/otp/"
+echo "  URL: https://www.mavrykpremium.com/system/"
 echo "======================================"

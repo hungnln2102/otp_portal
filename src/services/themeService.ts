@@ -167,11 +167,24 @@ export async function resolvePortalTheme(): Promise<FestivalThemeType> {
 
   const remote = await fetchRemoteThemeConfig();
 
-  if (remote?.mode === "fixed" && remote.theme && FESTIVAL_THEMES.some((t) => t.id === remote.theme)) {
+  const targetSchedule = (remote && ((remote as any).schedule || remote)) as ThemeScheduleConfig | undefined;
+  const hasRichSchedule = Boolean(
+    targetSchedule &&
+      (targetSchedule.backgroundMode ||
+        typeof targetSchedule.respectHolidays === "boolean" ||
+        targetSchedule.cycleConfig)
+  );
+
+  // Tương thích cấu hình cũ (mode === "fixed" không kèm schedule mở rộng)
+  if (
+    !hasRichSchedule &&
+    remote?.mode === "fixed" &&
+    remote.theme &&
+    FESTIVAL_THEMES.some((t) => t.id === remote.theme)
+  ) {
     return remote.theme;
   }
 
-  const targetSchedule = (remote && ((remote as any).schedule || remote)) as ThemeScheduleConfig | undefined;
   const scheduledTheme = targetSchedule ? resolveScheduledTheme(targetSchedule, new Date()) : null;
   if (scheduledTheme && FESTIVAL_THEMES.some((t) => t.id === scheduledTheme)) {
     return scheduledTheme;

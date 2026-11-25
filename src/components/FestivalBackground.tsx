@@ -86,7 +86,7 @@ export const THEME_ART_MAP: Record<FestivalThemeType, ThemeArtInfo> = {
 };
 
 /**
- * Xử lý URL tĩnh tương thích cả khi mount tại /otp/ hoặc root
+ * Xử lý URL tĩnh tương thích cả khi mount tại /system/ hoặc root
  * Hỗ trợ tự động phân giải ảnh dọc cho mobile (/assets/holidays/mobile/)
  */
 export const resolveArtUrl = (artPath: string, isMobile = false): string => {
@@ -96,10 +96,10 @@ export const resolveArtUrl = (artPath: string, isMobile = false): string => {
   if (isMobile && targetPath.includes("/assets/holidays/")) {
     targetPath = targetPath.replace("/assets/holidays/", "/assets/holidays/mobile/");
   }
-  const base = ((import.meta as any).env?.BASE_URL as string) || "/otp/";
+  const base = ((import.meta as any).env?.BASE_URL as string) || "/system/";
   const cleanBase = base.endsWith("/") ? base : `${base}/`;
   const cleanPath = targetPath.startsWith("/") ? targetPath.slice(1) : targetPath;
-  if (cleanPath.startsWith("otp/")) {
+  if (cleanPath.startsWith("system/")) {
     return `/${cleanPath}`;
   }
   return `${cleanBase}${cleanPath}`;

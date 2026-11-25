@@ -15,6 +15,8 @@ import { OtpEntryWaitBanner } from "../../../components/OtpEntryWaitBanner";
 import { AdobeAccountRecovery } from "./AdobeAccountRecovery";
 
 interface AdobeSectionProps {
+  activeSubTab?: 1 | 2;
+  onSubTabChange?: (subTab: 1 | 2) => void;
   cooldown: number;
   setCooldown: (seconds: number) => void;
   entryWaitSeconds: number;
@@ -24,6 +26,8 @@ interface AdobeSectionProps {
 }
 
 export const AdobeSection: React.FC<AdobeSectionProps> = ({
+  activeSubTab,
+  onSubTabChange,
   cooldown,
   setCooldown,
   entryWaitSeconds,
@@ -31,7 +35,12 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
   copiedKey,
   copyToClipboard,
 }) => {
-  const [adobeIndex, setAdobeIndex] = useState(2);
+  const [localAdobeIndex, setLocalAdobeIndex] = useState<1 | 2>(2);
+  const adobeIndex: 1 | 2 = activeSubTab ?? localAdobeIndex;
+  const setAdobeIndex = (next: 1 | 2) => {
+    setLocalAdobeIndex(next);
+    onSubTabChange?.(next);
+  };
   const [adobeOtpEmail, setAdobeOtpEmail] = useState("");
   const [loadingOtp, setLoadingOtp] = useState(false);
   const [otpData, setOtpData] = useState<OtpResult | null>(null);
@@ -114,7 +123,7 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
       </div>
 
       {adobeIndex === 1 ? (
-        <AdobeAccountRecovery copyToClipboard={copyToClipboard} showToast={showToast}
+        <AdobeAccountRecovery copiedKey={copiedKey} copyToClipboard={copyToClipboard} showToast={showToast}
           onGoOtp={(email) => { setAdobeOtpEmail(email); setAdobeIndex(2); }} />
       ) : (
         <div className="space-y-3">

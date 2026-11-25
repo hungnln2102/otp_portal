@@ -20,6 +20,8 @@ import { OtpPinDisplay } from "../../../components/OtpPinDisplay";
 import { OtpEntryWaitBanner } from "../../../components/OtpEntryWaitBanner";
 
 interface GptSectionProps {
+  activeSubTab?: 0 | 1;
+  onSubTabChange?: (subTab: 0 | 1) => void;
   cooldown: number;
   setCooldown: (seconds: number) => void;
   entryWaitSeconds: number;
@@ -29,6 +31,8 @@ interface GptSectionProps {
 }
 
 export const GptSection: React.FC<GptSectionProps> = ({
+  activeSubTab,
+  onSubTabChange,
   cooldown,
   setCooldown,
   entryWaitSeconds,
@@ -36,7 +40,12 @@ export const GptSection: React.FC<GptSectionProps> = ({
   copiedKey,
   copyToClipboard,
 }) => {
-  const [gptIndex, setGptIndex] = useState<0 | 1>(1); // Default: 1 (Lấy OTP)
+  const [localGptIndex, setLocalGptIndex] = useState<0 | 1>(1); // Default: 1 (Lấy OTP)
+  const gptIndex: 0 | 1 = activeSubTab ?? localGptIndex;
+  const setGptIndex = (next: 0 | 1) => {
+    setLocalGptIndex(next);
+    onSubTabChange?.(next);
+  };
   const [gptAccountSearch, setGptAccountSearch] = useState("");
   const [gptOtpEmail, setGptOtpEmail] = useState("");
 

@@ -7,16 +7,22 @@ import {
   Film,
   Bot,
   ShieldCheck,
+  Tag,
+  KeyRound,
+  Home,
 } from "lucide-react";
 import { FestivalBackground, FestivalThemeType } from "./components/FestivalBackground";
-import { MainTab, ToastMessage } from "./types/otp";
+import { ToastMessage } from "./types/otp";
 import { FestivalStage } from "./features/festivals/components/FestivalStage";
 import { AdobeSection } from "./features/adobe/components/AdobeSection";
 import { NetflixSection } from "./features/netflix/components/NetflixSection";
 import { GptSection } from "./features/gpt/components/GptSection";
 import { TwoFactorSection } from "./features/twoFactor/components/TwoFactorSection";
+import { PublicPricePage } from "./features/pricing";
+import { PortalHomePage } from "./features/home";
 import { FaqModal } from "./components/FaqModal";
 import { ENTRY_WAIT_SECONDS, useEntryWaitTimer } from "./hooks/useEntryWaitTimer";
+import { usePortalRoute } from "./config/portalRoutes";
 import {
   getAutoThemeByDate,
   resolvePortalTheme,
@@ -51,8 +57,28 @@ export const App: React.FC = () => {
 
   const currentThemeMeta = getThemeMeta(theme);
 
-  // Main Tab State (Adobe vs Netflix vs 2FA)
-  const [activeTab, setActiveTab] = useState<MainTab>("adobe");
+  // Điều hướng 3 chế độ: Trang chủ (/), Hệ thống (/system/<slug>) và Bảng Giá (/price)
+  const {
+    pageMode,
+    activeTab,
+    activeSubTab,
+    navigateToHome,
+    navigateToPrice,
+    navigateToTab,
+    navigateToSubTab,
+  } = usePortalRoute();
+  const isHomePage = pageMode === "home";
+  const isPricePage = pageMode === "price";
+
+  useEffect(() => {
+    if (isPricePage) {
+      document.title = "Bảng Giá Dịch Vụ — Mavryk Premium";
+    } else if (isHomePage) {
+      document.title = "Mavryk Premium — Hệ Thống & Bảng Giá Chính Thức";
+    } else {
+      document.title = "Mavryk Premium — Cổng Nhận Mã OTP & Kích Hoạt";
+    }
+  }, [isHomePage, isPricePage]);
 
   // Cooldown Counters (seconds)
   const [adobeOtpCooldown, setAdobeOtpCooldown] = useState(0);
@@ -123,8 +149,13 @@ export const App: React.FC = () => {
 
       {/* 3. HEADER TOPBAR GỌN GÀNG */}
       <header className="relative z-20 border-b border-[var(--line)] bg-[var(--panel)] backdrop-blur-xl h-14 flex items-center shrink-0">
-        <div className="max-w-5xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+        <div className={`${isPricePage ? "max-w-7xl" : "max-w-5xl"} w-full mx-auto px-4 sm:px-6 flex items-center justify-between`}>
+          <button
+            type="button"
+            onClick={navigateToHome}
+            title="Về trang chủ Mavryk Premium"
+            className="flex items-center gap-2.5 text-left cursor-pointer hover:opacity-90 transition-opacity"
+          >
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm shadow-md border border-[var(--line)]"
               style={{ background: "var(--btn)", color: "var(--btn-ink)", boxShadow: "0 2px 10px var(--glow)" }}
@@ -140,14 +171,18 @@ export const App: React.FC = () => {
                   className="text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--line)]"
                   style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--accent)" }}
                 >
-                  SECURE OTP
+                  {isPricePage ? "PRICE LIST" : isHomePage ? "PORTAL" : "SECURE OTP"}
                 </span>
               </div>
               <p className="text-[10px] text-[var(--soft)] hidden sm:block">
-                Cổng Cấp Mã Xác Minh & Tra Cứu Bản Quyền Trực Tuyến
+                {isPricePage
+                  ? "Bảng Giá Dịch Vụ & Phần Mềm Bản Quyền Chính Thức"
+                  : isHomePage
+                  ? "Trung Tâm Dịch Vụ & Cấp Mã Bản Quyền Chính Thức"
+                  : "Cổng Cấp Mã Xác Minh & Tra Cứu Bản Quyền Trực Tuyến"}
               </p>
             </div>
-          </div>
+          </button>
 
             <div className="flex items-center gap-2">
               <div
@@ -158,19 +193,108 @@ export const App: React.FC = () => {
                 <span>Hệ thống trực tuyến</span>
               </div>
 
-              <button
-                onClick={() => setShowFaqModal(true)}
-                className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
-                style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
-              >
-                <HelpCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
-                <span>Hướng Dẫn</span>
-              </button>
+              {isHomePage ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => navigateToTab(activeTab)}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "var(--btn)", color: "var(--btn-ink)" }}
+                  >
+                    <KeyRound className="w-3.5 h-3.5" />
+                    <span>Hệ Thống</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={navigateToPrice}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+                  >
+                    <Tag className="w-3.5 h-3.5 text-[var(--accent)]" />
+                    <span>Bảng Giá</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowFaqModal(true)}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
+                    <span className="hidden sm:inline">Hướng Dẫn</span>
+                  </button>
+                </>
+              ) : isPricePage ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={navigateToHome}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+                  >
+                    <Home className="w-3.5 h-3.5 text-[var(--accent)]" />
+                    <span className="hidden sm:inline">Trang Chủ</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => navigateToTab(activeTab)}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+                  >
+                    <KeyRound className="w-3.5 h-3.5 text-[var(--accent)]" />
+                    <span>Hệ Thống</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={navigateToHome}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+                  >
+                    <Home className="w-3.5 h-3.5 text-[var(--accent)]" />
+                    <span className="hidden sm:inline">Trang Chủ</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={navigateToPrice}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+                  >
+                    <Tag className="w-3.5 h-3.5 text-[var(--accent)]" />
+                    <span>Bảng Giá</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowFaqModal(true)}
+                    className="px-3 py-1 rounded-full text-xs font-semibold border border-[var(--line)] transition-all flex items-center gap-1.5 hover:brightness-125"
+                    style={{ background: "rgba(255, 255, 255, 0.08)", color: "var(--ink)" }}
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
+                    <span>Hướng Dẫn</span>
+                  </button>
+                </>
+              )}
             </div>
         </div>
       </header>
 
-      {/* 4. SÂN KHẤU CHÍNH: MAIN STAGE CARD LUXURY GLASSMORPHISM */}
+      {/* 4. SÂN KHẤU CHÍNH: TRANG CHỦ (/), TRANG BẢNG GIÁ (/price) HOẶC CỔNG OTP (/system/*) */}
+      {isHomePage ? (
+        <PortalHomePage
+          themeTitle={currentThemeMeta.title}
+          themeSubtitle={currentThemeMeta.subtitle}
+          onNavigateSystem={() => navigateToTab(activeTab)}
+          onNavigatePrice={navigateToPrice}
+        />
+      ) : isPricePage ? (
+        <PublicPricePage />
+      ) : (
       <main className="main-stage flex-1 flex flex-col justify-center items-center px-4 py-2 relative z-10 overflow-hidden">
         {/* Hero Title Stage (Bên ngoài card) */}
         <FestivalStage
@@ -193,7 +317,7 @@ export const App: React.FC = () => {
           >
             <button
               type="button"
-              onClick={() => setActiveTab("adobe")}
+              onClick={() => navigateToTab("adobe")}
               className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg font-bold text-xs transition-all duration-200"
               style={{
                 background: activeTab === "adobe" ? "var(--btn)" : "transparent",
@@ -209,7 +333,7 @@ export const App: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setActiveTab("netflix")}
+              onClick={() => navigateToTab("netflix")}
               className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg font-bold text-xs transition-all duration-200"
               style={{
                 background: activeTab === "netflix" ? "var(--btn)" : "transparent",
@@ -223,7 +347,7 @@ export const App: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setActiveTab("gpt")}
+              onClick={() => navigateToTab("gpt")}
               className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg font-bold text-xs transition-all duration-200"
               style={{
                 background: activeTab === "gpt" ? "var(--btn)" : "transparent",
@@ -237,7 +361,7 @@ export const App: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setActiveTab("two_factor")}
+              onClick={() => navigateToTab("two_factor")}
               className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg font-bold text-xs transition-all duration-200"
               style={{
                 background: activeTab === "two_factor" ? "var(--btn)" : "transparent",
@@ -253,6 +377,8 @@ export const App: React.FC = () => {
           {/* Form Content: Adobe or Netflix or GPT or 2FA */}
           {activeTab === "adobe" && (
             <AdobeSection
+              activeSubTab={activeSubTab === 1 ? 1 : 2}
+              onSubTabChange={(sub) => navigateToSubTab("adobe", sub)}
               cooldown={adobeOtpCooldown}
               setCooldown={setAdobeOtpCooldown}
               entryWaitSeconds={entryWaitSeconds}
@@ -264,6 +390,8 @@ export const App: React.FC = () => {
 
           {activeTab === "netflix" && (
             <NetflixSection
+              activeSubTab={activeSubTab === 1 || activeSubTab === 2 ? activeSubTab : 0}
+              onSubTabChange={(sub) => navigateToSubTab("netflix", sub)}
               cooldown={netflixCooldown}
               setCooldown={setNetflixCooldown}
               entryWaitSeconds={entryWaitSeconds}
@@ -275,6 +403,8 @@ export const App: React.FC = () => {
 
           {activeTab === "gpt" && (
             <GptSection
+              activeSubTab={activeSubTab === 0 ? 0 : 1}
+              onSubTabChange={(sub) => navigateToSubTab("gpt", sub)}
               cooldown={gptCooldown}
               setCooldown={setGptCooldown}
               entryWaitSeconds={entryWaitSeconds}
@@ -286,7 +416,6 @@ export const App: React.FC = () => {
 
           {activeTab === "two_factor" && (
             <TwoFactorSection
-              entryWaitSeconds={entryWaitSeconds}
               showToast={showToast}
               copiedKey={copiedKey}
               copyToClipboard={copyToClipboard}
@@ -303,6 +432,7 @@ export const App: React.FC = () => {
           </div>
         </div>
       </main>
+      )}
 
       {/* 5. MODAL HƯỚNG DẪN CHI TIẾT */}
       <FaqModal

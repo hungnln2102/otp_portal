@@ -24,6 +24,8 @@ import { OtpPinDisplay } from "../../../components/OtpPinDisplay";
 import { OtpEntryWaitBanner } from "../../../components/OtpEntryWaitBanner";
 
 interface NetflixSectionProps {
+  activeSubTab?: NetflixSubForm;
+  onSubTabChange?: (subTab: NetflixSubForm) => void;
   cooldown: number;
   setCooldown: (seconds: number) => void;
   entryWaitSeconds: number;
@@ -33,6 +35,8 @@ interface NetflixSectionProps {
 }
 
 export const NetflixSection: React.FC<NetflixSectionProps> = ({
+  activeSubTab,
+  onSubTabChange,
   cooldown,
   setCooldown,
   entryWaitSeconds,
@@ -40,7 +44,12 @@ export const NetflixSection: React.FC<NetflixSectionProps> = ({
   copiedKey,
   copyToClipboard,
 }) => {
-  const [netflixIndex, setNetflixIndex] = useState<NetflixSubForm>(0); // Default: Hộ gia đình
+  const [localNetflixIndex, setLocalNetflixIndex] = useState<NetflixSubForm>(0); // Default: Hộ gia đình
+  const netflixIndex: NetflixSubForm = activeSubTab ?? localNetflixIndex;
+  const setNetflixIndex = (next: NetflixSubForm) => {
+    setLocalNetflixIndex(next);
+    onSubTabChange?.(next);
+  };
   const [netflixEmail, setNetflixEmail] = useState("");
   const [loading, setLoading] = useState(false);
 

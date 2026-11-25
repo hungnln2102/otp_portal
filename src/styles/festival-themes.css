@@ -4,184 +4,184 @@
    ========================================================================== */
 @font-face {
   font-family: "AnimeSans";
-  src: url("/assets/fonts/noto-sans.woff") format("woff");
+  src: url("/system/assets/fonts/noto-sans.woff") format("woff");
   font-display: swap;
 }
 @font-face {
   font-family: "AnimeSans";
-  src: url("/assets/fonts/noto-sans-bold.woff") format("woff");
+  src: url("/system/assets/fonts/noto-sans-bold.woff") format("woff");
   font-weight: 600 900;
   font-display: swap;
 }
 @font-face {
   font-family: "AnimeSerif";
-  src: url("/assets/fonts/noto-serif.woff") format("woff");
+  src: url("/system/assets/fonts/noto-serif.woff") format("woff");
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 01";
-  src: url("/assets/fonts/display-01.woff") format("woff");
+  src: url("/system/assets/fonts/display-01.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 02";
-  src: url("/assets/fonts/display-02.woff") format("woff");
+  src: url("/system/assets/fonts/display-02.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 03";
-  src: url("/assets/fonts/display-03.woff") format("woff");
+  src: url("/system/assets/fonts/display-03.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 04";
-  src: url("/assets/fonts/display-04.woff") format("woff");
+  src: url("/system/assets/fonts/display-04.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 05";
-  src: url("/assets/fonts/display-05.woff") format("woff");
+  src: url("/system/assets/fonts/display-05.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 06";
-  src: url("/assets/fonts/display-06.woff") format("woff");
+  src: url("/system/assets/fonts/display-06.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 07";
-  src: url("/assets/fonts/display-07.woff") format("woff");
+  src: url("/system/assets/fonts/display-07.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 08";
-  src: url("/assets/fonts/display-08.woff") format("woff");
+  src: url("/system/assets/fonts/display-08.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 09";
-  src: url("/assets/fonts/display-09.woff") format("woff");
+  src: url("/system/assets/fonts/display-09.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 10";
-  src: url("/assets/fonts/display-10.woff") format("woff");
+  src: url("/system/assets/fonts/display-10.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 11";
-  src: url("/assets/fonts/display-11.woff") format("woff");
+  src: url("/system/assets/fonts/display-11.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 12";
-  src: url("/assets/fonts/display-12.woff") format("woff");
+  src: url("/system/assets/fonts/display-12.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 13";
-  src: url("/assets/fonts/display-13.woff") format("woff");
+  src: url("/system/assets/fonts/display-13.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 14";
-  src: url("/assets/fonts/display-14.woff") format("woff");
+  src: url("/system/assets/fonts/display-14.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 15";
-  src: url("/assets/fonts/display-15.woff") format("woff");
+  src: url("/system/assets/fonts/display-15.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 16";
-  src: url("/assets/fonts/display-16.woff") format("woff");
+  src: url("/system/assets/fonts/display-16.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 17";
-  src: url("/assets/fonts/display-17.woff") format("woff");
+  src: url("/system/assets/fonts/display-17.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 18";
-  src: url("/assets/fonts/display-18.woff") format("woff");
+  src: url("/system/assets/fonts/display-18.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 19";
-  src: url("/assets/fonts/display-19.woff") format("woff");
+  src: url("/system/assets/fonts/display-19.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 20";
-  src: url("/assets/fonts/display-20.woff") format("woff");
+  src: url("/system/assets/fonts/display-20.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 21";
-  src: url("/assets/fonts/display-21.woff") format("woff");
+  src: url("/system/assets/fonts/display-21.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 22";
-  src: url("/assets/fonts/display-22.woff") format("woff");
+  src: url("/system/assets/fonts/display-22.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 23";
-  src: url("/assets/fonts/display-23.woff") format("woff");
+  src: url("/system/assets/fonts/display-23.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "Mavryk Display 24";
-  src: url("/assets/fonts/display-24.woff") format("woff");
+  src: url("/system/assets/fonts/display-24.woff") format("woff");
   font-style: normal;
   font-weight: 400;
   font-display: swap;

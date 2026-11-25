@@ -1,5 +1,5 @@
 import { OTP_OPERATION_ERROR } from "../../../services/otpService";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ShieldCheck,
   KeyRound,
@@ -12,18 +12,17 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { OtpPinDisplay } from "../../../components/OtpPinDisplay";
-import { OtpEntryWaitBanner } from "../../../components/OtpEntryWaitBanner";
 import { generateTotp, isValidBase32Secret, TotpResult } from "../../../utils/totpGenerator";
 
+const GENERATE_COOLDOWN_SECONDS = 5;
+
 interface TwoFactorSectionProps {
-  entryWaitSeconds: number;
   showToast: (type: "success" | "error" | "info", text: string) => void;
   copiedKey: string | null;
   copyToClipboard: (text: string, key: string, label?: string) => void;
 }
 
 export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
-  entryWaitSeconds,
   showToast,
   copiedKey,
   copyToClipboard,
@@ -31,15 +30,21 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
   const [secretKey, setSecretKey] = useState<string>("");
   const [totpData, setTotpData] = useState<TotpResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [cooldown, setCooldown] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
-  const isEntryLocked = entryWaitSeconds > 0;
 
-  const activeSecretRef = useRef<string>("");
+  // Cooldown 5 giây giữa mỗi lần bấm nút lấy mã mới
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => {
+      setCooldown((prev) => (prev > 1 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldown > 0]);
 
-  // Hàm sinh mã OTP 6 số
+  // Hàm sinh mã OTP 6 số mỗi khi bấm nút lấy mã
   const handleGenerate = async (customKey?: string) => {
-    if (isEntryLocked) return;
+    if (loading || cooldown > 0) return;
     const keyToUse = (customKey !== undefined ? customKey : secretKey).trim();
     if (!keyToUse) {
       setErrorMsg("Vui lòng nhập hoặc dán khóa bí mật 2FA (Secret Key).");
@@ -55,9 +60,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
     setLoading(true);
 
     try {
-      const result = await generateTotp(keyToUse);
+      const result = await generateTotp(keyToUse, Date.now());
       setTotpData(result);
-      activeSecretRef.current = keyToUse;
+      setCooldown(GENERATE_COOLDOWN_SECONDS);
       showToast("success", `Đã tạo mã OTP 6 số [${result.code}] thành công!`);
     } catch {
       setTotpData(null);
@@ -67,35 +72,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
     }
   };
 
-  // Timer đếm ngược chu kỳ 30 giây & tự động đổi mã khi hết hạn
-  useEffect(() => {
-    if (!totpData || !activeSecretRef.current || !autoRefresh) return;
-
-    const interval = setInterval(async () => {
-      const epochSeconds = Math.floor(Date.now() / 1000);
-      const remaining = 30 - (epochSeconds % 30);
-      const progress = Math.round((remaining / 30) * 100);
-
-      // Nếu chuyển sang chu kỳ 30s mới -> Tính toán mã mới
-      if (remaining === 30 || remaining <= 0) {
-        try {
-          const fresh = await generateTotp(activeSecretRef.current);
-          setTotpData(fresh);
-        } catch {
-          setTotpData(null);
-          setErrorMsg(OTP_OPERATION_ERROR);
-        }
-      } else {
-        setTotpData((prev) => (prev ? { ...prev, remainingSeconds: remaining, progress } : null));
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [totpData?.step, autoRefresh]);
-
   // Dán từ clipboard
   const handlePaste = async () => {
-    if (isEntryLocked) return;
+    if (loading) return;
     try {
       const text = await navigator.clipboard.readText();
       if (text) {
@@ -103,10 +82,6 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
         setSecretKey(clean);
         setErrorMsg(null);
         showToast("info", "Đã dán khóa 2FA từ bộ nhớ tạm!");
-        // Tự động sinh mã nếu hợp lệ
-        if (isValidBase32Secret(clean)) {
-          handleGenerate(clean);
-        }
       }
     } catch {
       showToast("error", OTP_OPERATION_ERROR);
@@ -118,8 +93,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
     setSecretKey("");
     setTotpData(null);
     setErrorMsg(null);
-    activeSecretRef.current = "";
   };
+
+  const isButtonDisabled = loading || cooldown > 0 || !secretKey.trim();
 
   return (
     <div className="space-y-4 text-left animate-in fade-in duration-200">
@@ -137,11 +113,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
           className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--line)]"
           style={{ background: "rgba(255, 255, 255, 0.06)", color: "var(--accent)" }}
         >
-          OTP 6 Số • Chu Kỳ 30s
+          OTP 6 Số • TOTP
         </span>
       </div>
-
-      <OtpEntryWaitBanner remainingSeconds={entryWaitSeconds} />
 
       {/* 2. Input Box: Khóa Bí Mật 2FA */}
       <div className="space-y-1.5">
@@ -152,20 +126,16 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 
           <input
             type="text"
-            disabled={isEntryLocked || loading}
+            disabled={loading}
             value={secretKey}
             onChange={(e) => {
               setSecretKey(e.target.value);
               if (errorMsg) setErrorMsg(null);
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !isEntryLocked) handleGenerate();
+              if (e.key === "Enter" && !isButtonDisabled) void handleGenerate();
             }}
-            placeholder={
-              isEntryLocked
-                ? `Vui lòng chờ ${entryWaitSeconds}s để nhập khóa bí mật 2FA...`
-                : "Nhập hoặc dán Khóa Bí Mật 2FA (Secret Key: vd JBSWY3DPEHPK3PXP...)"
-            }
+            placeholder="Nhập hoặc dán Khóa Bí Mật 2FA (Secret Key: vd JBSWY3DPEHPK3PXP...)"
             className="w-full pl-10 pr-20 py-2.5 rounded-xl border border-[var(--line)] text-xs text-[var(--ink)] placeholder:text-[var(--soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-all uppercase font-mono disabled:opacity-55 disabled:cursor-not-allowed"
             style={{ background: "rgba(0, 0, 0, 0.4)" }}
           />
@@ -174,7 +144,7 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
             {secretKey && (
               <button
                 type="button"
-                disabled={isEntryLocked || loading}
+                disabled={loading}
                 onClick={handleClear}
                 className="p-1 rounded-md text-[var(--soft)] hover:text-[var(--ink)] hover:bg-white/10 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                 title="Xóa nội dung"
@@ -185,7 +155,7 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 
             <button
               type="button"
-              disabled={isEntryLocked || loading}
+              disabled={loading}
               onClick={handlePaste}
               className="p-1.5 rounded-md text-[var(--accent)] hover:bg-white/10 transition-all flex items-center gap-1 text-[10px] font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
               title="Dán từ bộ nhớ tạm"
@@ -208,30 +178,30 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
       <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={() => handleGenerate()}
-          disabled={isEntryLocked || loading || !secretKey.trim()}
+          onClick={() => void handleGenerate()}
+          disabled={isButtonDisabled}
           className="btn-cta flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          {isEntryLocked ? (
-            <>
-              <Clock className="w-4 h-4 shrink-0" />
-              <span>Vui lòng chờ {entryWaitSeconds}s</span>
-            </>
-          ) : loading ? (
+          {loading ? (
             <>
               <RefreshCw className="w-4 h-4 animate-spin" />
               <span>Đang tính toán...</span>
             </>
+          ) : cooldown > 0 ? (
+            <>
+              <Clock className="w-4 h-4 shrink-0" />
+              <span>Lấy mã mới sau {cooldown}s</span>
+            </>
           ) : (
             <>
               <Sparkles className="w-4 h-4 shrink-0" />
-              <span>Lấy Mã 2FA (6 Số)</span>
+              <span>{totpData ? "Lấy Mã 2FA Mới (6 Số)" : "Lấy Mã 2FA (6 Số)"}</span>
             </>
           )}
         </button>
       </div>
 
-      {/* 4. Result Area: 6 Ô Số OTP & Đếm Ngược Thời Gian */}
+      {/* 4. Result Area: 6 Ô Số OTP */}
       {totpData && (
         <div
           className="p-3.5 rounded-2xl border border-[var(--line)] space-y-3 animate-in fade-in zoom-in-95 duration-200"
@@ -243,18 +213,6 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               Mã Xác Thực 2FA Hiện Tại:
             </span>
-
-            {/* Countdown Badge */}
-            <div
-              className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold border ${
-                totpData.remainingSeconds <= 5
-                  ? "bg-rose-950/80 text-rose-300 border-rose-500/60 animate-pulse"
-                  : "bg-emerald-950/80 text-emerald-300 border-emerald-500/50"
-              }`}
-            >
-              <Clock className="w-3 h-3" />
-              <span>{totpData.remainingSeconds}s</span>
-            </div>
           </div>
 
           {/* 6 Ô Số OTP Rực Rỡ & Nút Sao Chép */}
@@ -264,32 +222,6 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
             itemKey="2fa-totp-pin"
             onCopy={copyToClipboard}
           />
-
-          {/* Thanh Tiến Trình 30 Giây */}
-          <div className="space-y-1">
-            <div className="w-full h-1.5 bg-black/40 rounded-full overflow-hidden border border-[var(--line)]">
-              <div
-                className="h-full transition-all duration-1000 ease-linear rounded-full"
-                style={{
-                  width: `${totpData.progress}%`,
-                  backgroundColor: totpData.remainingSeconds <= 5 ? "#f43f5e" : "var(--accent)",
-                }}
-              />
-            </div>
-
-            <div className="flex items-center justify-between text-[10px] text-[var(--soft)] pt-0.5">
-              <span>Mã tự động đổi sau 30 giây</span>
-              <label className="flex items-center gap-1 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={autoRefresh}
-                  onChange={(e) => setAutoRefresh(e.target.checked)}
-                  className="rounded accent-[var(--accent)] w-3 h-3 cursor-pointer"
-                />
-                <span>Tự động làm mới</span>
-              </label>
-            </div>
-          </div>
         </div>
       )}
 
@@ -306,4 +238,3 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
     </div>
   );
 };
-

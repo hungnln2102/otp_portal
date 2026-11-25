@@ -13,8 +13,10 @@ import {
 } from "lucide-react";
 import type { AccountResult } from "../../../types/otp";
 import { AccountStatusView } from "../../../components/account-status";
+import { YunaAccountResultCard } from "./YunaAccountResultCard";
 
 interface Props {
+  copiedKey?: string | null;
   copyToClipboard: (text: string, key: string, label?: string) => void;
   showToast: (type: "success" | "error" | "info", text: string) => void;
   onGoOtp: (email: string) => void;
@@ -31,6 +33,7 @@ interface RecoveryResult {
 }
 
 export const AdobeAccountRecovery: React.FC<Props> = ({
+  copiedKey,
   copyToClipboard,
   showToast,
   onGoOtp,
@@ -213,7 +216,7 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
         </div>
       )}
 
-      {(showAdesCredentials || password) && (
+      {(showAdesCredentials || (password && result?.source !== "yuna")) && (
         <div
           className="flex items-center justify-between p-2.5 rounded-xl border border-[var(--line)] text-xs animate-in fade-in"
           style={{ background: "rgba(0, 0, 0, 0.45)" }}
@@ -248,29 +251,12 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
       {/* 8. Render Thẻ Trạng Thái Tài Khoản */}
       {result?.data &&
         (result.source === "yuna" ? (
-          <div className="space-y-2.5 rounded-2xl border border-[var(--line)] p-3.5 text-xs">
-            <div className="flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-[var(--soft)]">Tài khoản Adobe</div>
-                <div className="break-all font-mono font-bold text-[var(--ink)]">{result.data.account}</div>
-              </div>
-              <button
-                type="button"
-                className="flex shrink-0 items-center gap-1 text-[var(--accent)] hover:underline"
-                onClick={() => copyToClipboard(result.data!.account, "adobe_recovery_account")}
-              >
-                <Copy className="w-3.5 h-3.5" />
-                Sao chép
-              </button>
-            </div>
-            <button
-              type="button"
-              className="btn-cta w-full cursor-not-allowed opacity-60"
-              disabled
-            >
-              Báo lỗi · Sắp hỗ trợ
-            </button>
-          </div>
+          <YunaAccountResultCard
+            data={result.data}
+            copiedKey={copiedKey}
+            copyToClipboard={copyToClipboard}
+            onGoOtp={onGoOtp}
+          />
         ) : result.data.status_type === "active" || result.data.status_type === "inactive" ? (
           <AccountStatusView
             data={{ ...result.data, status_type: result.data.status_type }}
