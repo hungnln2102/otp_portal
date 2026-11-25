@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
-# Deploy OTP Portal Container trÃªn VPS (tÆ°Æ¡ng tá»± admin_orderlist)
-# Usage: ./deploy.sh | ./deploy.sh --no-cache
+# Deploy the OTP Portal container on the VPS.
+# Usage: bash deploy.sh [--no-cache | --commit <sha>]
 # ==============================================================================
 
 set -euo pipefail
@@ -119,7 +119,6 @@ check_redirect "$public/otp/adobe-otp?$query" "$public/system/adobe-otp?$query"
 check_redirect "$public/check-profile?$query" "$public/system/adobe-account?$query"
 check_redirect "$public/renew-adobe?$query" "$public/system/adobe-account?$query"
 check_redirect "$public/netflix?$query" "$public/system/netflix-household?$query"
-check_redirect "https://otp.mavrykpremium.com/?$query" "$public/system/?$query"
 
 for season in spring summer autumn winter; do
   seasonal_path="/system/seasonal/$season.html"
