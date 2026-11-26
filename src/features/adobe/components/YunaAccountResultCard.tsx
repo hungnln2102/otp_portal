@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { SelectField } from "../../../components/SelectField";
 import {
   Mail,
   KeyRound,
@@ -17,13 +18,32 @@ interface YunaAccountData {
   password?: string;
   plan?: string;
   expired_at?: string;
+  report_status?: string;
 }
+
+const REPORT_REASONS = [
+  { value: "expired", label: "Gói hết hạn" },
+  { value: "credentials", label: "Sai tài khoản/mật khẩu" },
+  { value: "otp", label: "Không nhận được OTP" },
+  { value: "inactive", label: "Tài khoản không hoạt động" },
+  { value: "other", label: "Tự điền lý do" },
+];
+
+const REPORT_STATUS_MESSAGES: Record<string, string> = {
+  pending: "⚠️ Tài khoản này đã được báo lỗi và đang chờ bảo hành. Vui lòng chờ.",
+  adobe_renewing: "Yuna đang kiểm tra bảo hành. Vui lòng chờ.",
+  adobe_success: "Báo lỗi của tài khoản này đã được xử lý.",
+  cooldown: "Chưa thể gửi báo lỗi lúc này. Vui lòng thử lại sau.",
+};
 
 interface YunaAccountResultCardProps {
   data: YunaAccountData;
   copiedKey?: string | null;
   copyToClipboard: (text: string, key: string, label?: string) => void;
   onGoOtp?: (email: string) => void;
+  onReport: (reason: string, details?: string) => Promise<void>;
+  reporting: boolean;
+  reportUnavailable: boolean;
 }
 
 export const YunaAccountResultCard: React.FC<YunaAccountResultCardProps> = ({
@@ -31,7 +51,15 @@ export const YunaAccountResultCard: React.FC<YunaAccountResultCardProps> = ({
   copiedKey,
   copyToClipboard,
   onGoOtp,
+  onReport,
+  reporting,
+  reportUnavailable,
 }) => {
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDetails, setReportDetails] = useState("");
+  const reportLocked = Boolean(data.report_status && data.report_status !== "none");
+  const reportMessage = REPORT_STATUS_MESSAGES[data.report_status ?? ""];
   const isAccountCopied = copiedKey === "adobe_recovery_account";
   const isPasswordCopied = copiedKey === "adobe_recovery_password";
 
@@ -200,12 +228,54 @@ export const YunaAccountResultCard: React.FC<YunaAccountResultCardProps> = ({
 
         <button
           type="button"
-          disabled
-          className="w-full py-2 px-3 rounded-xl border border-[var(--line)] bg-white/[0.03] text-[11px] font-semibold text-[var(--soft)]/75 flex items-center justify-center gap-1.5 cursor-not-allowed"
+          aria-expanded={reportOpen && !reportLocked}
+          disabled={reportLocked || reporting || reportUnavailable}
+          onClick={() => setReportOpen((open) => !open)}
+          className="w-full py-2 px-3 rounded-xl border border-[var(--line)] bg-white/[0.03] text-[11px] font-semibold text-[var(--ink)] flex items-center justify-center gap-1.5 hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <AlertTriangle className="w-3.5 h-3.5 opacity-70" />
-          <span>Báo lỗi · Sắp hỗ trợ</span>
+          <span>Báo lỗi</span>
         </button>
+        {reportMessage && <p role="status" className="text-[var(--ink)]">{reportMessage}</p>}
+        {reportOpen && !reportLocked && (
+          <div className="space-y-2 rounded-xl border border-[var(--line)] p-3">
+            <SelectField
+              label="Lý do báo lỗi"
+              value={reportReason}
+              onChange={(event) => setReportReason(event.target.value)}
+              disabled={reporting || reportUnavailable}
+            >
+              <option value="" disabled>Chọn lý do</option>
+              {REPORT_REASONS.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </SelectField>
+            {reportReason === "other" && (
+              <label className="block space-y-1.5 font-semibold text-[var(--ink)]">
+                <span>Mô tả lỗi (không bắt buộc)</span>
+                <textarea
+                  value={reportDetails}
+                  onChange={(event) => setReportDetails(event.target.value)}
+                  maxLength={400}
+                  rows={3}
+                  disabled={reporting || reportUnavailable}
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--ground)] px-3 py-2"
+                />
+              </label>
+            )}
+            <button
+              type="button"
+              disabled={!reportReason || reporting || reportUnavailable}
+              onClick={() => void onReport(
+                reportReason,
+                reportReason === "other" ? reportDetails.trim() || undefined : undefined
+              )}
+              className="w-full rounded-lg bg-[var(--btn)] px-3 py-2 font-bold text-[var(--btn-ink)] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {reporting ? "Đang gửi báo lỗi…" : "Gửi báo lỗi"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

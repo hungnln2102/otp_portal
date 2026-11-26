@@ -1,5 +1,5 @@
-import { OTP_OPERATION_ERROR, type AdobeOrderProof } from "../../../services/otpService";
-import React, { useState } from "react";
+import { fetchAdobeRecoveryReportStatus, OTP_OPERATION_ERROR, submitAdobeRecoveryReport, type AdobeOrderProof } from "../../../services/otpService";
+import React, { useEffect, useState } from "react";
 import {
   KeyRound,
   UserCheck,
@@ -15,6 +15,10 @@ import type { AccountResult } from "../../../types/otp";
 import { AccountStatusView } from "../../../components/account-status";
 import { YunaAccountResultCard } from "./YunaAccountResultCard";
 
+const REPORT_REFRESH_INTERVAL_MS = 10_000;
+const REPORT_REFRESH_TIMEOUT_MS = 180_000;
+const VERIFIED_REPORT_STATES = new Set(["pending", "adobe_success", "cooldown"]);
+
 interface Props {
   copiedKey?: string | null;
   copyToClipboard: (text: string, key: string, label?: string) => void;
@@ -29,7 +33,10 @@ interface RecoveryResult {
   replacementRequired?: boolean;
   outOfStock?: boolean;
   replaced?: boolean;
-  data?: Omit<AccountResult, "status_type"> & { status_type?: AccountResult["status_type"] | "unknown" };
+  data?: Omit<AccountResult, "status_type"> & {
+    status_type?: AccountResult["status_type"] | "unknown";
+    report_status?: string;
+  };
 }
 
 export const AdobeAccountRecovery: React.FC<Props> = ({
@@ -42,14 +49,58 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
   const [contact, setContact] = useState("");
   const [contactRequired, setContactRequired] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const [result, setResult] = useState<(RecoveryResult & { orderProof: AdobeOrderProof }) | null>(null);
   const [error, setError] = useState("");
   const account = result?.data?.account;
   const password = result?.data?.password;
   const showAdesCredentials = result?.source === "ades" && Boolean(result.data);
+  const refreshingProof = result?.source === "yuna" && result.data?.report_status === "adobe_renewing"
+    ? result.orderProof
+    : null;
+
+  useEffect(() => {
+    if (!refreshingProof || busy || error || reporting ||
+        refreshingProof.code !== code.trim() || refreshingProof.contact !== contact.trim()) return;
+
+    const proof = refreshingProof;
+    const controller = new AbortController();
+    let nextAttempt: number;
+
+    async function refreshStatus() {
+      try {
+        const status = await fetchAdobeRecoveryReportStatus(proof, controller.signal);
+        if (controller.signal.aborted) return;
+        if (status && VERIFIED_REPORT_STATES.has(status)) {
+          setResult((current) =>
+            current?.orderProof === proof && current.data?.report_status === "adobe_renewing"
+              ? { ...current, data: { ...current.data, report_status: status } }
+              : current
+          );
+          return;
+        }
+      } catch {
+        // A status request can fail temporarily. Keep the last confirmed state.
+        if (controller.signal.aborted) return;
+      }
+      nextAttempt = window.setTimeout(refreshStatus, REPORT_REFRESH_INTERVAL_MS);
+    }
+
+    nextAttempt = window.setTimeout(refreshStatus, REPORT_REFRESH_INTERVAL_MS);
+    const deadline = window.setTimeout(() => {
+      window.clearTimeout(nextAttempt);
+      controller.abort();
+    }, REPORT_REFRESH_TIMEOUT_MS);
+
+    return () => {
+      window.clearTimeout(nextAttempt);
+      window.clearTimeout(deadline);
+      controller.abort();
+    };
+  }, [refreshingProof, busy, error, reporting, code, contact]);
 
   async function request(action: "check" | "claim") {
-    if (busy || !code.trim()) return;
+    if (busy || reporting || !code.trim()) return;
     const orderProof = { code: code.trim(), contact: contact.trim() };
     setBusy(true);
     setError("");
@@ -76,6 +127,25 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
       showToast("error", OTP_OPERATION_ERROR);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function report(reason: string, details?: string) {
+    if (busy || error || reporting || result?.source !== "yuna" || !result.data) return;
+    const proof = result.orderProof;
+    setReporting(true);
+    try {
+      const response = await submitAdobeRecoveryReport(proof, reason, details);
+      if (!response.success || !response.report_status) throw new Error(OTP_OPERATION_ERROR);
+      setResult((current) =>
+        current?.orderProof === proof && current.data
+          ? { ...current, data: { ...current.data, report_status: response.report_status } }
+          : current
+      );
+    } catch {
+      showToast("error", "Chưa gửi được báo lỗi. Vui lòng thử lại sau.");
+    } finally {
+      setReporting(false);
     }
   }
 
@@ -252,10 +322,14 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
       {result?.data &&
         (result.source === "yuna" ? (
           <YunaAccountResultCard
+            key={result.orderProof.code}
             data={result.data}
             copiedKey={copiedKey}
             copyToClipboard={copyToClipboard}
             onGoOtp={onGoOtp}
+            onReport={report}
+            reporting={reporting}
+            reportUnavailable={busy || Boolean(error)}
           />
         ) : result.data.status_type === "active" || result.data.status_type === "inactive" ? (
           <AccountStatusView

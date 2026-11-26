@@ -33,6 +33,35 @@ export interface AdobeOrderProof {
   contact: string;
 }
 
+export async function fetchAdobeRecoveryReportStatus(
+  proof: AdobeOrderProof,
+  signal: AbortSignal,
+): Promise<string | undefined> {
+  const response = await fetch("/api/public/otp/adobe/recovery/check", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...proof, statusOnly: true }),
+    signal,
+  });
+  if (!response.ok) return undefined;
+  const result: ApiResponse<{ report_status?: string }> & { source?: string } = await response.json();
+  return result.success && result.source === "yuna" ? result.data?.report_status : undefined;
+}
+
+export async function submitAdobeRecoveryReport(
+  proof: AdobeOrderProof,
+  reason: string,
+  details?: string,
+): Promise<ApiResponse & { report_status?: string }> {
+  const response = await fetch("/api/public/otp/adobe/recovery/report", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...proof, reason, details }),
+  });
+  if (!response.ok) return { success: false };
+  return response.json();
+}
+
 export async function fetchAdobeSwitchTeam(
   proof: AdobeOrderProof,
   email: string,
