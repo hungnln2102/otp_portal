@@ -828,13 +828,13 @@ body {
 
 /* THANH DOCK ĐIỀU HƯỚNG 24 LỄ HỘI CỦA MASTER */
 .main-stage {
-  transform: translateY(clamp(-42px, -4vh, -18px));
+  transform: none;
 }
 .festival-title-stage {
   width: min(100%, 760px);
-  min-height: clamp(170px, 23vh, 260px);
-  margin-bottom: 2px;
-  padding: 20px 34px;
+  min-height: clamp(84px, 11vh, 128px);
+  margin-bottom: 6px;
+  padding: 10px 24px 16px;
   display: grid;
   place-items: center;
   position: relative;
@@ -866,7 +866,7 @@ body {
   z-index: -1;
   width: min(94%, 710px);
   height: 1px;
-  bottom: 26px;
+  bottom: 8px;
   transform: translateX(-50%);
   background: linear-gradient(90deg, transparent, var(--line) 22%, var(--accent) 50%, var(--line) 78%, transparent);
   box-shadow: 0 0 18px var(--glow);
@@ -900,11 +900,11 @@ body {
 }
 
 .festival-title-stage__title {
-  max-width: 13ch;
+  max-width: 15ch;
   margin: 0 auto;
   color: var(--ink);
   font-family: var(--display);
-  font-size: clamp(2.75rem, 5.5vw, 4.85rem);
+  font-size: clamp(2.1rem, 4.4vw, 3.85rem);
   font-weight: 800;
   line-height: 0.98;
   letter-spacing: -0.045em;
@@ -914,7 +914,7 @@ body {
 }
 
 .festival-title-stage__subtitle {
-  margin: 14px auto 0;
+  margin: 8px auto 0;
   color: var(--accent);
   font-family: var(--font);
   font-size: clamp(0.78rem, 1.25vw, 1rem);
@@ -951,26 +951,26 @@ body {
 
 @media (max-width: 640px) {
   .main-stage {
-    transform: translateY(-14px);
+    transform: none;
   }
 
   .festival-title-stage {
-    min-height: clamp(116px, 18vh, 156px);
-    padding: 14px 20px 18px;
+    min-height: clamp(78px, 12vh, 108px);
+    padding: 8px 16px 14px;
   }
 
   .festival-title-stage::after {
-    bottom: 14px;
+    bottom: 6px;
   }
 
   .festival-title-stage__title {
     max-width: 15ch;
-    font-size: clamp(2rem, 10vw, 3rem);
+    font-size: clamp(1.85rem, 8.5vw, 2.75rem);
   }
 
   .festival-title-stage__subtitle {
     max-width: 30ch;
-    margin-top: 10px;
+    margin-top: 6px;
     letter-spacing: 0.07em;
   }
 }

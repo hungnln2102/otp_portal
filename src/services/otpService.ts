@@ -19,15 +19,6 @@ export async function fetchAdobeAccount(search: string): Promise<ApiResponse<Acc
   return res.json();
 }
 
-export async function fetchAdobeCheck(email: string): Promise<ApiResponse<AccountResult>> {
-  const res = await fetch("/api/public/otp/adobe/check", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: email.trim(), search: email.trim(), input: email.trim() }),
-  });
-  return res.json();
-}
-
 export interface AdobeOrderProof {
   code: string;
   contact: string;
@@ -65,24 +56,30 @@ export async function submitAdobeRecoveryReport(
 export async function fetchAdobeSwitchTeam(
   proof: AdobeOrderProof,
   email: string,
-): Promise<ApiResponse<OrgSwitchResponse>> {
+  signal: AbortSignal,
+): Promise<OrgSwitchResponse> {
   const res = await fetch("/api/public/otp/adobe/switch-team", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...proof, email: email.trim() }),
+    signal,
   });
+  if (!res.ok) return { success: false };
   return res.json();
 }
 
 export async function fetchAdobeSwitchTeamStatus(
   proof: AdobeOrderProof,
   email: string,
-): Promise<ApiResponse<OrgSwitchResponse>> {
+  signal: AbortSignal,
+): Promise<OrgSwitchResponse> {
   const res = await fetch("/api/public/otp/adobe/switch-team/status", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...proof, email: email.trim() }),
+    signal,
   });
+  if (!res.ok) return { success: false };
   return res.json();
 }
 

@@ -7,7 +7,6 @@ import {
   OTP_OPERATION_ERROR,
   fetchAdobeSwitchTeam,
   fetchAdobeSwitchTeamStatus,
-  fetchAdobeCheck,
   type AdobeOrderProof,
 } from "../../services/otpService";
 
@@ -34,102 +33,77 @@ export const AccountStatusView: React.FC<AccountStatusViewProps> = ({
   const [switchProgress, setSwitchProgress] = useState<OrgSwitchResponse | null>(null);
   const [switchError, setSwitchError] = useState<string | null>(null);
 
-  const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const pollCountRef = useRef(0);
-  const isMountedRef = useRef(true);
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const switchRequestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-      if (pollTimerRef.current) {
-        clearInterval(pollTimerRef.current);
-        pollTimerRef.current = null;
-      }
-    };
-  }, []);
-
-  // Hủy polling nếu data thay đổi (ví dụ người dùng kiểm tra email khác)
-  useEffect(() => {
-    if (pollTimerRef.current) {
-      clearInterval(pollTimerRef.current);
-      pollTimerRef.current = null;
-    }
     setIsSwitching(false);
     setSwitchProgress(null);
     setSwitchError(null);
-    pollCountRef.current = 0;
-  }, [data.account, orderProof]);
+    return () => {
+      switchRequestRef.current?.abort();
+      switchRequestRef.current = null;
+      if (pollTimerRef.current !== null) clearTimeout(pollTimerRef.current);
+    };
+  }, [data.account, orderProof.code, orderProof.contact]);
 
   const handleStartSwitchTeam = async () => {
-    if (isSwitching) return;
+    if (switchRequestRef.current) return;
 
-    try {
-      setIsSwitching(true);
-      setSwitchError(null);
-      setSwitchProgress({ status: "waiting" });
-      pollCountRef.current = 0;
+    const controller = new AbortController();
+    switchRequestRef.current = controller;
+    const { signal } = controller;
+    let pollCount = 0;
+    setIsSwitching(true);
+    setSwitchError(null);
+    setSwitchProgress({ status: "waiting" });
 
-      const res = await fetchAdobeSwitchTeam(orderProof, data.account);
-      if (!res.success) {
-        throw new Error(res.error || res.message || "Không thể kích hoạt yêu cầu đổi team.");
+    const finish = (error?: string) => {
+      switchRequestRef.current = null;
+      setIsSwitching(false);
+      if (!error) return;
+      setSwitchError(error);
+      showToast("error", error);
+    };
+
+    const poll = async () => {
+      pollTimerRef.current = null;
+      pollCount += 1;
+      const result = await fetchAdobeSwitchTeamStatus(orderProof, data.account, signal).catch(() => null);
+      if (signal.aborted) return;
+      if (result?.status?.toLowerCase() === "failed") {
+        finish("Chuyển team không thành công.");
+        return;
       }
-
-      setSwitchProgress(res.data || res);
-      showToast("info", "Đã gửi yêu cầu đổi team, hệ thống đang xử lý...");
-
-      // Bắt đầu chu kỳ Polling
-      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
-
-      pollTimerRef.current = setInterval(async () => {
-        if (!isMountedRef.current) return;
-        pollCountRef.current += 1;
-
-        // Giới hạn an toàn: tối đa 20 lần thử (~70s)
-        if (pollCountRef.current > 20) {
-          if (pollTimerRef.current) clearInterval(pollTimerRef.current);
-          if (isMountedRef.current) {
-            setIsSwitching(false);
-            setSwitchError(OTP_OPERATION_ERROR);
-            showToast("error", OTP_OPERATION_ERROR);
-          }
+      if (result?.success) {
+        setSwitchProgress(result);
+        if (result.status === "completed" && result.accountResult?.status_type === "active") {
+          finish();
+          onStatusUpdated?.(result.accountResult);
+          showToast("success", "Đã chuyển team thành công, tài khoản đang hoạt động.");
           return;
         }
-
-        try {
-          // 1. Kiểm tra trạng thái org-switch
-          const statusRes = await fetchAdobeSwitchTeamStatus(orderProof, data.account);
-          if (isMountedRef.current && statusRes) {
-            setSwitchProgress(statusRes.data || statusRes);
-          }
-
-          // 2. Kiểm tra trạng thái tài khoản thực tế (user-status)
-          const checkRes = await fetchAdobeCheck(data.account);
-          if (isMountedRef.current && checkRes.success && checkRes.data) {
-            if (checkRes.data.status_type === "active") {
-              // Chuyển team thành công!
-              if (pollTimerRef.current) {
-                clearInterval(pollTimerRef.current);
-                pollTimerRef.current = null;
-              }
-              setIsSwitching(false);
-              showToast("success", "Chúc mừng! Đã chuyển team thành công, tài khoản đang hoạt động bình thường.");
-              if (onStatusUpdated) {
-                onStatusUpdated(checkRes.data);
-              }
-            }
-          }
-        } catch (pollErr: any) {
-          console.warn("[Ades Switch Team Poll] Lỗi chu kỳ polling:", pollErr.message);
-        }
-      }, 3500);
-    } catch {
-      if (isMountedRef.current) {
-        setIsSwitching(false);
-        setSwitchError(OTP_OPERATION_ERROR);
-        showToast("error", OTP_OPERATION_ERROR);
       }
+      if (pollCount >= 20) {
+        finish("Chưa xác minh được kết quả chuyển team. Hãy kiểm tra lại trạng thái tài khoản.");
+        return;
+      }
+      pollTimerRef.current = setTimeout(poll, 3500);
+    };
+
+    const result = await fetchAdobeSwitchTeam(orderProof, data.account, signal).catch(() => null);
+    if (signal.aborted) return;
+    if (result?.status?.toLowerCase() === "failed") {
+      finish("Chuyển team không thành công.");
+      return;
     }
+    if (!result?.success) {
+      finish(OTP_OPERATION_ERROR);
+      return;
+    }
+    setSwitchProgress(result);
+    showToast("info", "Đã gửi yêu cầu đổi team, hệ thống đang xử lý...");
+    pollTimerRef.current = setTimeout(poll, 3500);
   };
 
   // Xác định form hiển thị dựa trên status_type

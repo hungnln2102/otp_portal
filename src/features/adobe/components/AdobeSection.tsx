@@ -81,8 +81,8 @@ export const AdobeSection: React.FC<AdobeSectionProps> = ({
   };
 
   return (
-    <div className="text-left space-y-3">
-      <div className="flex items-center justify-between pb-2 border-b border-[var(--line)]">
+    <div className="text-left space-y-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[var(--line)]">
         <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full" style={{ background: "var(--accent)" }} />
           Adobe Creative Cloud

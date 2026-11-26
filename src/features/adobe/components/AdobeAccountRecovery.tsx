@@ -1,5 +1,5 @@
 import { fetchAdobeRecoveryReportStatus, OTP_OPERATION_ERROR, submitAdobeRecoveryReport, type AdobeOrderProof } from "../../../services/otpService";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   KeyRound,
   UserCheck,
@@ -8,8 +8,12 @@ import {
   AlertCircle,
   CheckCircle2,
   Copy,
+  Check,
+  Mail,
   Sparkles,
   AlertTriangle,
+  RotateCcw,
+  X,
 } from "lucide-react";
 import type { AccountResult } from "../../../types/otp";
 import { AccountStatusView } from "../../../components/account-status";
@@ -45,6 +49,7 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
   showToast,
   onGoOtp,
 }) => {
+  const codeInputRef = useRef<HTMLInputElement>(null);
   const [code, setCode] = useState("");
   const [contact, setContact] = useState("");
   const [contactRequired, setContactRequired] = useState(false);
@@ -52,6 +57,17 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
   const [reporting, setReporting] = useState(false);
   const [result, setResult] = useState<(RecoveryResult & { orderProof: AdobeOrderProof }) | null>(null);
   const [error, setError] = useState("");
+
+  const resetCodeInput = (shouldFocus = false) => {
+    setCode("");
+    setContact("");
+    setContactRequired(false);
+    setError("");
+    setResult(null);
+    if (shouldFocus) {
+      window.requestAnimationFrame(() => codeInputRef.current?.focus());
+    }
+  };
   const account = result?.data?.account;
   const password = result?.data?.password;
   const showAdesCredentials = result?.source === "ades" && Boolean(result.data);
@@ -124,7 +140,6 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
       }
     } catch {
       setError(OTP_OPERATION_ERROR);
-      showToast("error", OTP_OPERATION_ERROR);
     } finally {
       setBusy(false);
     }
@@ -154,35 +169,80 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
     void request("check");
   };
 
+  const isAccountCopied = copiedKey === "adobe_recovery_account";
+  const isPasswordCopied = copiedKey === "adobe_recovery_password";
+  const showPasswordCard = Boolean(showAdesCredentials || (password && result?.source !== "yuna"));
+  const showCredentialsGrid = showAdesCredentials || showPasswordCard;
+
   return (
-    <form className="space-y-3.5" onSubmit={handleSubmit}>
-      {/* 1. Ô Nhập Mã Đơn / Mã Kích Hoạt */}
+    <form className="space-y-2.5" onSubmit={handleSubmit}>
+      {/* 1. Ô Nhập Mã Đơn / Mã Kích Hoạt + Nút Kiểm Tra trên 1 hàng ngang gọn */}
       <div>
-        <label className="block text-xs font-semibold text-[var(--soft)] mb-1 flex items-center justify-between">
-          <span className="flex items-center gap-1.5">
-            <KeyRound className="w-3.5 h-3.5 text-[var(--accent)]" />
-            <span>Mã đơn hoặc mã kích hoạt</span>
-            <span className="text-rose-400">*</span>
-          </span>
+        <label
+          htmlFor="adobe-recovery-code"
+          className="text-xs font-semibold text-[var(--soft)] mb-1 flex items-center gap-1.5"
+        >
+          <KeyRound className="w-3.5 h-3.5 text-[var(--accent)]" />
+          <span>Mã đơn hoặc mã kích hoạt</span>
+          <span className="text-rose-400">*</span>
         </label>
-        <div className="relative">
-          <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--soft)] pointer-events-none" />
-          <input
-            type="text"
-            required
-            value={code}
-            disabled={busy}
-            placeholder="Nhập mã đơn (VD: MAVR-123456) hoặc mã key kích hoạt..."
-            onChange={(e) => {
-              setCode(e.target.value);
-              setContact("");
-              setContactRequired(false);
-              setError("");
-              setResult(null);
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative flex-1 min-w-0">
+            <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--soft)] pointer-events-none" />
+            <input
+              ref={codeInputRef}
+              id="adobe-recovery-code"
+              type="text"
+              required
+              value={code}
+              disabled={busy}
+              placeholder="Nhập mã đơn (VD: MAVR-123456) hoặc mã key kích hoạt..."
+              onChange={(e) => {
+                setCode(e.target.value);
+                setContact("");
+                setContactRequired(false);
+                setError("");
+                setResult(null);
+              }}
+              className="w-full rounded-xl pl-9 pr-8 py-2.5 text-xs text-[var(--ink)] placeholder-[var(--soft)]/50 focus:outline-none focus:border-[var(--accent)] transition-all border border-[var(--line)] font-mono"
+              style={{ background: "rgba(0, 0, 0, 0.45)" }}
+            />
+            {code && !busy && (
+              <button
+                type="button"
+                aria-label="Xóa mã đang nhập"
+                onClick={() => resetCodeInput(true)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-md text-[var(--soft)] hover:text-[var(--ink)] hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={busy || !code.trim() || (contactRequired && !contact.trim())}
+            className="btn-cta sm:!w-auto shrink-0 whitespace-nowrap"
+            style={{
+              padding: "9px 16px",
+              fontSize: "12.5px",
+              borderRadius: "12px",
+              opacity: !code.trim() || (contactRequired && !contact.trim()) ? 0.65 : 1,
+              cursor: !code.trim() || (contactRequired && !contact.trim()) ? "not-allowed" : "pointer",
             }}
-            className="w-full rounded-xl pl-9 pr-3 py-2.5 text-xs text-[var(--ink)] placeholder-[var(--soft)]/50 focus:outline-none transition-all border border-[var(--line)] font-mono"
-            style={{ background: "rgba(0, 0, 0, 0.45)" }}
-          />
+          >
+            {busy ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
+                <span>Đang kiểm tra...</span>
+              </>
+            ) : (
+              <>
+                <Search className="w-3.5 h-3.5 shrink-0" />
+                <span>Lấy và kiểm tra tài khoản</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
@@ -191,37 +251,64 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
           <span className="flex items-center gap-1.5"><UserCheck className="h-4 w-4" />Thông tin liên hệ khi mua hàng</span>
           <input required value={contact} disabled={busy}
             onChange={(event) => setContact(event.target.value)}
-            className="w-full rounded-xl border border-[var(--line)] bg-transparent px-3 py-2.5 text-[var(--ink)]" />
+            className="w-full rounded-xl border border-[var(--line)] bg-black/45 px-3 py-2 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--accent)]" />
         </label>
       )}
-      <button
-        type="submit"
-        disabled={busy || !code.trim() || (contactRequired && !contact.trim())}
-        className="btn-cta w-full"
-        style={{
-          padding: "11px 18px",
-          opacity: !code.trim() || (contactRequired && !contact.trim()) ? 0.65 : 1,
-          cursor: !code.trim() || (contactRequired && !contact.trim()) ? "not-allowed" : "pointer",
-        }}
-      >
-        {busy ? (
-          <>
-            <RefreshCw className="w-4 h-4 animate-spin shrink-0" />
-            <span>Đang lấy và kiểm tra tài khoản...</span>
-          </>
-        ) : (
-          <>
-            <Search className="w-4 h-4 shrink-0" />
-            <span>Lấy và kiểm tra tài khoản</span>
-          </>
-        )}
-      </button>
 
-      {/* 4. Thông Báo Lỗi Nếu Có */}
+      {/* 4. Thẻ Trạng Thái Khi Mã Không Tồn Tại / Không Tra Cứu Được */}
       {error && (
-        <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-300 text-xs flex items-center gap-2.5 animate-in fade-in duration-200">
-          <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-          <span>{error}</span>
+        <div
+          role="alert"
+          className="p-3.5 rounded-2xl border border-rose-500/35 text-xs animate-in fade-in zoom-in-95 duration-200 relative overflow-hidden backdrop-blur-xl space-y-2.5"
+          style={{
+            background:
+              "linear-gradient(150deg, rgba(136, 19, 55, 0.26) 0%, rgba(22, 8, 14, 0.75) 100%)",
+            boxShadow:
+              "0 10px 26px -10px rgba(244, 63, 94, 0.18), inset 0 1px 0 rgba(253, 164, 175, 0.2)",
+          }}
+        >
+          <div
+            className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-14 rounded-full pointer-events-none opacity-30 blur-xl"
+            style={{ background: "radial-gradient(ellipse, #f43f5e 0%, transparent 70%)" }}
+          />
+
+          <div className="flex items-center justify-between gap-2 pb-2 border-b border-rose-500/20 relative z-10">
+            <span className="font-extrabold text-[var(--ink)] uppercase flex items-center gap-1.5 text-[11px] tracking-wider">
+              <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+              Tra cứu tài khoản
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-200 border border-rose-400/45 shadow-[0_0_12px_rgba(244,63,94,0.22)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+              KHÔNG TÌM THẤY
+            </span>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left relative z-10 py-0.5">
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-11 h-11 rounded-xl border border-rose-400/50 bg-rose-950/65 flex items-center justify-center shrink-0 shadow-[0_0_18px_rgba(244,63,94,0.28)]">
+                <AlertCircle className="w-5 h-5 text-rose-300" />
+              </div>
+
+              <div className="min-w-0 space-y-1">
+                <h3 className="text-sm font-black text-rose-200 tracking-tight leading-snug">
+                  Không tìm thấy mã đơn hoặc mã kích hoạt
+                </h3>
+                <p className="text-[11px] text-[var(--soft)] leading-relaxed">
+                  Vui lòng kiểm tra lại chính tả mã đã nhập hoặc{" "}
+                  <span className="text-rose-200 font-semibold">{error}</span>
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => resetCodeInput(true)}
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-rose-400/35 bg-rose-500/15 text-[11px] font-bold text-rose-100 hover:bg-rose-500/25 active:scale-[0.98] transition-all shrink-0 cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Nhập lại mã khác</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -267,53 +354,112 @@ export const AdobeAccountRecovery: React.FC<Props> = ({
         </div>
       )}
 
-      {showAdesCredentials && (
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-black/45 p-2.5 text-xs">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="shrink-0 text-[10px] font-semibold uppercase text-[var(--soft)]">Tài khoản:</span>
-            <span className="break-all font-mono font-bold text-[var(--ink)]">{account}</span>
-          </div>
-          {account && (
-            <button
-              type="button"
-              className="flex shrink-0 items-center gap-1 text-[11px] font-semibold text-[var(--accent)] hover:underline"
-              onClick={() => copyToClipboard(account, "adobe_recovery_account")}
-            >
-              <Copy className="w-3.5 h-3.5" />
-              <span>Sao chép</span>
-            </button>
-          )}
-        </div>
-      )}
-
-      {(showAdesCredentials || (password && result?.source !== "yuna")) && (
+      {showCredentialsGrid && (
         <div
-          className="flex items-center justify-between p-2.5 rounded-xl border border-[var(--line)] text-xs animate-in fade-in"
-          style={{ background: "rgba(0, 0, 0, 0.45)" }}
+          className={`grid grid-cols-1 gap-2 animate-in fade-in ${
+            showAdesCredentials && showPasswordCard ? "sm:grid-cols-12" : ""
+          }`}
         >
-          <div className="flex items-center gap-2">
-            <span className="text-[var(--soft)] text-[10px] uppercase font-semibold">
-              Mật khẩu:
-            </span>
-            <span className="font-mono font-bold text-amber-300">
-              {password}
-            </span>
-          </div>
-          {password && (
-            <button
-              type="button"
-              className="flex items-center gap-1 text-[11px] font-semibold text-[var(--accent)] hover:underline cursor-pointer"
-              onClick={() =>
-                copyToClipboard(
-                  password,
-                  "adobe_recovery_password",
-                  "Đã sao chép mật khẩu Adobe!"
-                )
-              }
+          {showAdesCredentials && (
+            <div
+              className={`flex items-center justify-between gap-2.5 rounded-xl border border-[var(--line)] px-3 py-2 text-xs ${
+                showPasswordCard ? "sm:col-span-7" : ""
+              }`}
+              style={{ background: "rgba(0, 0, 0, 0.45)" }}
             >
-              <Copy className="w-3.5 h-3.5" />
-              <span>Sao chép</span>
-            </button>
+              <div className="min-w-0 space-y-0.5">
+                <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--soft)]">
+                  <Mail className="w-3 h-3 text-[var(--accent)] shrink-0" />
+                  <span>Tài khoản</span>
+                </div>
+                <div
+                  title={account}
+                  className="truncate font-mono text-[12px] font-bold text-[var(--ink)] select-all"
+                >
+                  {account}
+                </div>
+              </div>
+              {account && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    copyToClipboard(
+                      account,
+                      "adobe_recovery_account",
+                      "Đã sao chép tài khoản Adobe!"
+                    )
+                  }
+                  className={`flex shrink-0 items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-semibold transition-all cursor-pointer ${
+                    isAccountCopied
+                      ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-300"
+                      : "border-[var(--line)] bg-white/[0.04] text-[var(--accent)] hover:bg-white/[0.1]"
+                  }`}
+                >
+                  {isAccountCopied ? (
+                    <>
+                      <Check className="w-3 h-3" />
+                      <span>Đã chép</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Sao chép</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          )}
+
+          {showPasswordCard && (
+            <div
+              className={`flex items-center justify-between gap-2.5 rounded-xl border border-[var(--line)] px-3 py-2 text-xs ${
+                showAdesCredentials ? "sm:col-span-5" : ""
+              }`}
+              style={{ background: "rgba(0, 0, 0, 0.45)" }}
+            >
+              <div className="min-w-0 space-y-0.5">
+                <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--soft)]">
+                  <KeyRound className="w-3 h-3 text-amber-300 shrink-0" />
+                  <span>Mật khẩu</span>
+                </div>
+                <div
+                  title={password}
+                  className="truncate font-mono text-[12px] font-bold text-amber-300 select-all"
+                >
+                  {password || "—"}
+                </div>
+              </div>
+              {password && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    copyToClipboard(
+                      password,
+                      "adobe_recovery_password",
+                      "Đã sao chép mật khẩu Adobe!"
+                    )
+                  }
+                  className={`flex shrink-0 items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-semibold transition-all cursor-pointer ${
+                    isPasswordCopied
+                      ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-300"
+                      : "border-[var(--line)] bg-white/[0.04] text-[var(--accent)] hover:bg-white/[0.1]"
+                  }`}
+                >
+                  {isPasswordCopied ? (
+                    <>
+                      <Check className="w-3 h-3" />
+                      <span>Đã chép</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>Sao chép</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}

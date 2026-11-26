@@ -51,38 +51,38 @@ export interface ThemeArtInfo {
 export const THEME_ART_MAP: Record<FestivalThemeType, ThemeArtInfo> = {
   // Mùa Xuân
   "tet-duong-lich": { id: 1, slug: "01", name: "Tết Dương Lịch", art: "/assets/holidays/01.webp", font: "Mavryk Display 01", accent: "#edc882", rayColor: "rgba(237, 200, 130, 0.4)" },
-  "ong-tao":        { id: 2, slug: "02", name: "Ông Công Ông Táo", art: "/assets/holidays/02.webp", font: "Mavryk Display 02", accent: "#f0bd72", rayColor: "rgba(240, 189, 114, 0.4)" },
-  "tet":            { id: 3, slug: "03", name: "Tết Nguyên Đán", art: "/assets/holidays/03.webp", font: "Mavryk Display 03", accent: "#ffcf78", rayColor: "rgba(255, 207, 120, 0.4)" },
-  "valentine":      { id: 4, slug: "04", name: "Valentine", art: "/assets/holidays/04.webp", font: "Mavryk Display 04", accent: "#ffb1c4", rayColor: "rgba(255, 177, 196, 0.4)" },
-  "nguyen-tieu":    { id: 5, slug: "05", name: "Tết Nguyên Tiêu", art: "/assets/holidays/05.webp", font: "Mavryk Display 05", accent: "#f3d28c", rayColor: "rgba(243, 210, 140, 0.4)" },
+  "ong-tao": { id: 2, slug: "02", name: "Ông Công Ông Táo", art: "/assets/holidays/02.webp", font: "Mavryk Display 02", accent: "#f0bd72", rayColor: "rgba(240, 189, 114, 0.4)" },
+  "tet": { id: 3, slug: "03", name: "Tết Nguyên Đán", art: "/assets/holidays/03.webp", font: "Mavryk Display 03", accent: "#ffcf78", rayColor: "rgba(255, 207, 120, 0.4)" },
+  "valentine": { id: 4, slug: "04", name: "Valentine", art: "/assets/holidays/04.webp", font: "Mavryk Display 04", accent: "#ffb1c4", rayColor: "rgba(255, 177, 196, 0.4)" },
+  "nguyen-tieu": { id: 5, slug: "05", name: "Tết Nguyên Tiêu", art: "/assets/holidays/05.webp", font: "Mavryk Display 05", accent: "#f3d28c", rayColor: "rgba(243, 210, 140, 0.4)" },
   "quoc-te-phu-nu": { id: 6, slug: "06", name: "Quốc Tế Phụ Nữ", art: "/assets/holidays/06.webp", font: "Mavryk Display 06", accent: "#eab7ee", rayColor: "rgba(234, 183, 238, 0.4)" },
-  "han-thuc":       { id: 7, slug: "07", name: "Tết Hàn Thực", art: "/assets/holidays/07.webp", font: "Mavryk Display 07", accent: "#b5e3d0", rayColor: "rgba(181, 227, 208, 0.4)" },
-  "gio-to":         { id: 8, slug: "08", name: "Giỗ Tổ Hùng Vương", art: "/assets/holidays/08.webp", font: "Mavryk Display 08", accent: "#d9ba77", rayColor: "rgba(217, 186, 119, 0.4)" },
+  "han-thuc": { id: 7, slug: "07", name: "Tết Hàn Thực", art: "/assets/holidays/07.webp", font: "Mavryk Display 07", accent: "#b5e3d0", rayColor: "rgba(181, 227, 208, 0.4)" },
+  "gio-to": { id: 8, slug: "08", name: "Giỗ Tổ Hùng Vương", art: "/assets/holidays/08.webp", font: "Mavryk Display 08", accent: "#d9ba77", rayColor: "rgba(217, 186, 119, 0.4)" },
   // Mùa Hạ
-  "thong-nhat":     { id: 9, slug: "09", name: "Thống Nhất Non Sông", art: "/assets/holidays/09.webp", font: "Mavryk Display 09", accent: "#ffd486", rayColor: "rgba(255, 212, 134, 0.4)" },
-  "lao-dong":       { id: 10, slug: "10", name: "Quốc Tế Lao Động", art: "/assets/holidays/10.webp", font: "Mavryk Display 10", accent: "#f6cf78", rayColor: "rgba(246, 207, 120, 0.4)" },
-  "phat-dan":       { id: 11, slug: "11", name: "Đại Lễ Phật Đản", art: "/assets/holidays/11.webp", font: "Mavryk Display 11", accent: "#f4c5d6", rayColor: "rgba(244, 197, 214, 0.4)" },
-  "thieu-nhi":      { id: 12, slug: "12", name: "Quốc Tế Thiếu Nhi", art: "/assets/holidays/12.webp", font: "Mavryk Display 12", accent: "#ffdc9c", rayColor: "rgba(255, 220, 156, 0.4)" },
-  "doan-ngo":       { id: 13, slug: "13", name: "Tết Đoan Ngọ", art: "/assets/holidays/13.webp", font: "Mavryk Display 13", accent: "#d8e6a0", rayColor: "rgba(216, 230, 160, 0.4)" },
-  "gia-dinh":       { id: 14, slug: "14", name: "Ngày Gia Đình Việt Nam", art: "/assets/holidays/14.webp", font: "Mavryk Display 14", accent: "#f5c894", rayColor: "rgba(245, 200, 148, 0.4)" },
+  "thong-nhat": { id: 9, slug: "09", name: "Thống Nhất Non Sông", art: "/assets/holidays/09.webp", font: "Mavryk Display 09", accent: "#ffd486", rayColor: "rgba(255, 212, 134, 0.4)" },
+  "lao-dong": { id: 10, slug: "10", name: "Quốc Tế Lao Động", art: "/assets/holidays/10.webp", font: "Mavryk Display 10", accent: "#f6cf78", rayColor: "rgba(246, 207, 120, 0.4)" },
+  "phat-dan": { id: 11, slug: "11", name: "Đại Lễ Phật Đản", art: "/assets/holidays/11.webp", font: "Mavryk Display 11", accent: "#f4c5d6", rayColor: "rgba(244, 197, 214, 0.4)" },
+  "thieu-nhi": { id: 12, slug: "12", name: "Quốc Tế Thiếu Nhi", art: "/assets/holidays/12.webp", font: "Mavryk Display 12", accent: "#ffdc9c", rayColor: "rgba(255, 220, 156, 0.4)" },
+  "doan-ngo": { id: 13, slug: "13", name: "Tết Đoan Ngọ", art: "/assets/holidays/13.webp", font: "Mavryk Display 13", accent: "#d8e6a0", rayColor: "rgba(216, 230, 160, 0.4)" },
+  "gia-dinh": { id: 14, slug: "14", name: "Ngày Gia Đình Việt Nam", art: "/assets/holidays/14.webp", font: "Mavryk Display 14", accent: "#f5c894", rayColor: "rgba(245, 200, 148, 0.4)" },
   // Mùa Thu
-  "that-tich":      { id: 15, slug: "15", name: "Lễ Thất Tịch", art: "/assets/holidays/15.webp", font: "Mavryk Display 15", accent: "#c9b4ff", rayColor: "rgba(201, 180, 255, 0.4)" },
-  "vu-lan":         { id: 16, slug: "16", name: "Vu Lan Báo Hiếu", art: "/assets/holidays/16.webp", font: "Mavryk Display 16", accent: "#efc5ab", rayColor: "rgba(239, 197, 171, 0.4)" },
-  "quoc-khanh":     { id: 17, slug: "17", name: "Đại Lễ Quốc Khánh", art: "/assets/holidays/17.webp", font: "Mavryk Display 17", accent: "#ffd28b", rayColor: "rgba(255, 210, 139, 0.4)" },
-  "trung-thu":      { id: 18, slug: "18", name: "Tết Trung Thu", art: "/assets/holidays/18.webp", font: "Mavryk Display 18", accent: "#f1d08e", rayColor: "rgba(241, 208, 142, 0.4)" },
-  "phu-nu-vn":      { id: 19, slug: "19", name: "Phụ Nữ Việt Nam", art: "/assets/holidays/19.webp", font: "Mavryk Display 19", accent: "#edb9d0", rayColor: "rgba(237, 185, 208, 0.4)" },
+  "that-tich": { id: 15, slug: "15", name: "Lễ Thất Tịch", art: "/assets/holidays/15.webp", font: "Mavryk Display 15", accent: "#c9b4ff", rayColor: "rgba(201, 180, 255, 0.4)" },
+  "vu-lan": { id: 16, slug: "16", name: "Vu Lan Báo Hiếu", art: "/assets/holidays/16.webp", font: "Mavryk Display 16", accent: "#efc5ab", rayColor: "rgba(239, 197, 171, 0.4)" },
+  "quoc-khanh": { id: 17, slug: "17", name: "Đại Lễ Quốc Khánh", art: "/assets/holidays/17.webp", font: "Mavryk Display 17", accent: "#ffd28b", rayColor: "rgba(255, 210, 139, 0.4)" },
+  "trung-thu": { id: 18, slug: "18", name: "Tết Trung Thu", art: "/assets/holidays/18.webp", font: "Mavryk Display 18", accent: "#f1d08e", rayColor: "rgba(241, 208, 142, 0.4)" },
+  "phu-nu-vn": { id: 19, slug: "19", name: "Phụ Nữ Việt Nam", art: "/assets/holidays/19.webp", font: "Mavryk Display 19", accent: "#edb9d0", rayColor: "rgba(237, 185, 208, 0.4)" },
   // Mùa Đông
-  "halloween":      { id: 20, slug: "20", name: "Halloween", art: "/assets/holidays/20.webp", font: "Mavryk Display 20", accent: "#f1b877", rayColor: "rgba(241, 184, 119, 0.4)" },
-  "nha-giao":       { id: 21, slug: "21", name: "Nhà Giáo Việt Nam", art: "/assets/holidays/21.webp", font: "Mavryk Display 21", accent: "#c4d8ef", rayColor: "rgba(196, 216, 239, 0.4)" },
-  "qdnd-vn":        { id: 22, slug: "22", name: "Ngày Thành Lập QĐND", art: "/assets/holidays/22.webp", font: "Mavryk Display 22", accent: "#d8cc8e", rayColor: "rgba(216, 204, 142, 0.4)" },
-  "giang-sinh":     { id: 23, slug: "23", name: "Giáng Sinh", art: "/assets/holidays/23.webp", font: "Mavryk Display 23", accent: "#efcf91", rayColor: "rgba(239, 207, 145, 0.4)" },
+  "halloween": { id: 20, slug: "20", name: "Halloween", art: "/assets/holidays/20.webp", font: "Mavryk Display 20", accent: "#f1b877", rayColor: "rgba(241, 184, 119, 0.4)" },
+  "nha-giao": { id: 21, slug: "21", name: "Nhà Giáo Việt Nam", art: "/assets/holidays/21.webp", font: "Mavryk Display 21", accent: "#c4d8ef", rayColor: "rgba(196, 216, 239, 0.4)" },
+  "qdnd-vn": { id: 22, slug: "22", name: "Ngày Thành Lập QĐND", art: "/assets/holidays/22.webp", font: "Mavryk Display 22", accent: "#d8cc8e", rayColor: "rgba(216, 204, 142, 0.4)" },
+  "giang-sinh": { id: 23, slug: "23", name: "Giáng Sinh", art: "/assets/holidays/23.webp", font: "Mavryk Display 23", accent: "#efcf91", rayColor: "rgba(239, 207, 145, 0.4)" },
   // Core
-  "modern":         { id: 24, slug: "24", name: "Mavryk Cyber Security", art: "/assets/holidays/24.webp", font: "Mavryk Display 24", accent: "#00f0ff", rayColor: "rgba(0, 240, 255, 0.35)" },
+  "modern": { id: 24, slug: "24", name: "Mavryk Cyber Security", art: "/assets/holidays/24.webp", font: "Mavryk Display 24", accent: "#00f0ff", rayColor: "rgba(0, 240, 255, 0.35)" },
   // 4 SEASONS ANIME CINEMATIC
-  "season-spring":  { id: 101, slug: "season-spring", name: "Xuân Khởi Sắc", art: "/assets/holidays/spring.webp", font: "Mavryk Display 03", accent: "#f4a8c0", rayColor: "rgba(255, 190, 210, 0.45)" },
-  "season-summer":  { id: 102, slug: "season-summer", name: "Hạ Rực Rỡ", art: "/assets/holidays/summer.webp", font: "Mavryk Display 12", accent: "#7fd7d2", rayColor: "rgba(127, 215, 210, 0.4)" },
-  "season-autumn":  { id: 103, slug: "season-autumn", name: "Thu Đoàn Viên", art: "/assets/holidays/autumn.webp", font: "Mavryk Display 18", accent: "#e9aa68", rayColor: "rgba(255, 185, 100, 0.45)" },
-  "season-winter":  { id: 104, slug: "season-winter", name: "Đông Ấm Áp", art: "/assets/holidays/winter.webp", font: "Mavryk Display 23", accent: "#9fd5ef", rayColor: "rgba(175, 225, 255, 0.35)" },
+  "season-spring": { id: 101, slug: "season-spring", name: "Xuân Khởi Sắc", art: "/assets/holidays/spring.webp", font: "Mavryk Display 03", accent: "#f4a8c0", rayColor: "rgba(255, 190, 210, 0.45)" },
+  "season-summer": { id: 102, slug: "season-summer", name: "Hạ Rực Rỡ", art: "/assets/holidays/summer.webp", font: "Mavryk Display 12", accent: "#7fd7d2", rayColor: "rgba(127, 215, 210, 0.4)" },
+  "season-autumn": { id: 103, slug: "season-autumn", name: "Thu Đoàn Viên", art: "/assets/holidays/autumn.webp", font: "Mavryk Display 18", accent: "#e9aa68", rayColor: "rgba(255, 185, 100, 0.45)" },
+  "season-winter": { id: 104, slug: "season-winter", name: "Đông Ấm Áp", art: "/assets/holidays/winter.webp", font: "Mavryk Display 23", accent: "#9fd5ef", rayColor: "rgba(175, 225, 255, 0.35)" },
 };
 
 /**
@@ -389,10 +389,10 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       ? seasonKey === "autumn"
         ? 34
         : seasonKey === "spring"
-        ? 38
-        : seasonKey === "summer"
-        ? 24
-        : 45
+          ? 38
+          : seasonKey === "summer"
+            ? 24
+            : 45
       : 0;
     // Trên điện thoại giảm 50% số hạt để tiết kiệm pin và không che lấp form OTP
     const foliageCount = isMobile ? Math.round(foliageBaseCount * 0.5) : foliageBaseCount;
@@ -521,7 +521,10 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
       const ctx = canvas.getContext("2d");
       if (ctx) {
         if (isSeasonalMode) {
-          ctx.clearRect(0, 0, 1600, 900);
+          ctx.save();
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.restore();
 
           // -------------------------------------------------------------
           // LỚP 1: VOLUMETRIC GOD RAYS (NẮNG XIÊN LUNG LINH ĐIỆN ẢNH)
@@ -529,11 +532,12 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
           ctx.save();
           ctx.globalCompositeOperation = "screen";
           const rayColor = currentArt.rayColor || "rgba(255, 200, 120, 0.4)";
+          const rayBottomY = canvasVirtualH + 60;
           for (let i = 0; i < 4; i++) {
             const rayOffset = Math.sin(time * 0.25 + i * 1.6) * 40;
             const rayAlpha = 0.045 + 0.035 * Math.sin(time * 0.35 + i * 2.1);
 
-            const rayGrad = ctx.createLinearGradient(-100, -50, 1400, 900);
+            const rayGrad = ctx.createLinearGradient(-100, -50, canvasVirtualW - 200, canvasVirtualH);
             rayGrad.addColorStop(0, rayColor);
             rayGrad.addColorStop(0.55, rayColor);
             rayGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
@@ -545,8 +549,8 @@ export const FestivalBackground: React.FC<FestivalBackgroundProps> = ({ theme })
             const rx = -100 + i * 180 + rayOffset;
             ctx.moveTo(rx, -60);
             ctx.lineTo(rx + 190, -60);
-            ctx.lineTo(rx + 1300, 960);
-            ctx.lineTo(rx + 1080, 960);
+            ctx.lineTo(rx + 1300, rayBottomY);
+            ctx.lineTo(rx + 1080, rayBottomY);
             ctx.closePath();
             ctx.fill();
           }

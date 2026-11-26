@@ -125,14 +125,20 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="h-screen max-h-screen overflow-hidden text-[var(--ink)] flex flex-col justify-between relative selection:bg-[var(--accent)] selection:text-[var(--ground)]">
+    <div
+      className={`${
+        isPricePage
+          ? "h-screen max-h-screen overflow-hidden"
+          : "min-h-screen md:h-screen md:max-h-screen md:overflow-hidden overflow-x-hidden"
+      } text-[var(--ink)] flex flex-col justify-between relative selection:bg-[var(--accent)] selection:text-[var(--ground)]`}
+    >
       {/* 1. NỀN KHÔNG GIAN LỄ HỘI: CANVAS HẠT 60FPS + BỘ VISUAL CHUYỂN ĐỘNG 2 BÊN SƯỜN */}
       <FestivalBackground theme={theme} />
 
       {/* 2. TOAST THÔNG BÁO NỔI */}
       {toast && (
         <div
-          className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-2.5 rounded-full shadow-2xl backdrop-blur-2xl border transition-all animate-in fade-in slide-in-from-top-4 duration-300 text-xs font-bold ${
+          className={`fixed top-[68px] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-full shadow-2xl backdrop-blur-2xl border transition-all animate-in fade-in slide-in-from-top-3 duration-300 text-xs font-bold max-w-[calc(100vw-2rem)] ${
             toast.type === "success"
               ? "bg-emerald-950/90 border-emerald-500/50 text-emerald-200 shadow-emerald-950/60"
               : toast.type === "error"
@@ -295,7 +301,7 @@ export const App: React.FC = () => {
       ) : isPricePage ? (
         <PublicPricePage />
       ) : (
-      <main className="main-stage flex-1 flex flex-col justify-center items-center px-4 py-2 relative z-10 overflow-hidden">
+      <main className="main-stage flex-1 min-h-0 flex flex-col justify-center items-center px-3 sm:px-4 py-2 relative z-10">
         {/* Hero Title Stage (Bên ngoài card) */}
         <FestivalStage
           title={currentThemeMeta.title}
@@ -304,7 +310,7 @@ export const App: React.FC = () => {
 
         {/* Central Glassmorphism Card */}
         <div
-          className="max-w-2xl w-full rounded-[26px] border border-[var(--line)] backdrop-blur-2xl p-4 sm:p-6 text-center relative overflow-hidden transition-all duration-300"
+          className="max-w-2xl w-full rounded-[24px] border border-[var(--line)] backdrop-blur-2xl p-3.5 sm:p-5 text-center relative transition-all duration-300"
           style={{
             background: "var(--panel)",
             boxShadow: "0 20px 60px rgba(0, 0, 0, 0.7), 0 0 35px var(--glow)",
@@ -312,7 +318,7 @@ export const App: React.FC = () => {
         >
           {/* Main Product Tabs Switcher [Adobe | Netflix | 2FA] */}
           <div
-            className="flex p-1 rounded-xl max-w-md mx-auto mb-4 border border-[var(--line)] shadow-lg"
+            className="flex p-1 rounded-xl max-w-md mx-auto mb-3 border border-[var(--line)] shadow-lg"
             style={{ background: "rgba(0, 0, 0, 0.5)" }}
           >
             <button
@@ -423,7 +429,7 @@ export const App: React.FC = () => {
           )}
 
           {/* Footer Card */}
-          <div className="pt-3 mt-3 border-t border-[var(--line)] flex items-center justify-between text-[10px] text-[var(--soft)]">
+          <div className="pt-2.5 mt-2.5 border-t border-[var(--line)] flex flex-wrap items-center justify-between gap-2 text-[10px] text-[var(--soft)]">
             <span>© 2026 Mavryk Premium • Bảo mật SSL 256-bit</span>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />

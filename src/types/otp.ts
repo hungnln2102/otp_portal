@@ -27,6 +27,7 @@ export interface OrgSwitchResponse {
   position?: number;
   etaSeconds?: number;
   newOrgName?: string;
+  accountResult?: AccountResult;
   error?: string;
   message?: string;
 }
