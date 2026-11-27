@@ -77,10 +77,12 @@ export const AccountStatusView: React.FC<AccountStatusViewProps> = ({
       }
       if (result?.success) {
         setSwitchProgress(result);
-        if (result.status === "completed" && result.accountResult?.status_type === "active") {
+        if (result.status === "completed" && result.accountResult) {
           finish();
           onStatusUpdated?.(result.accountResult);
-          showToast("success", "Đã chuyển team thành công, tài khoản đang hoạt động.");
+          if (result.accountResult.status_type === "active") {
+            showToast("success", "Đã chuyển team thành công, tài khoản đang hoạt động.");
+          }
           return;
         }
       }
